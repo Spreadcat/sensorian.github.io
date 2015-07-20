@@ -1,0 +1,8 @@
+Capacitive touch controller (3 buttons)
+=======================================
+
+.. automodule:: CAP1203
+	:members:
+	:undoc-members:
+	:inherited-members:
+	:show-inheritance:

@@ -1,0 +1,8 @@
+NOR Flash Memory 2Mbit
+======================
+
+.. automodule:: S25FL204K
+	:members:
+	:undoc-members:
+	:inherited-members:
+	:show-inheritance:

@@ -1,0 +1,808 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MCP79410RTCC &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for MCP79410RTCC</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;D.Qendri&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2015 Sensorian&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;GPL V3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">smbus</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">bus</span> <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">MCP79410address</span> <span class="o">=</span> <span class="mh">0x6f</span> 	  <span class="c"># SRAM board address </span>
+<span class="n">MCP79410EEPROMaddress</span> <span class="o">=</span> <span class="mh">0x57</span>	  <span class="c"># EEPROM address</span>
+
+<span class="n">EEPROM_WRITE</span>  <span class="o">=</span> <span class="mh">0xae</span>      <span class="c">#  DEVICE ADDR for EEPROM (writes)   </span>
+<span class="n">EEPROM_READ</span>  <span class="o">=</span> <span class="mh">0xaf</span>       <span class="c">#  DEVICE ADDR for EEPROM (reads)  </span>
+<span class="n">RTCC_WRITE</span>   <span class="o">=</span> <span class="mh">0xde</span>       <span class="c">#  DEVICE ADDR for RTCC MCHP  (writes) </span>
+<span class="n">RTCC_READ</span>    <span class="o">=</span> <span class="mh">0xdf</span>       <span class="c">#  DEVICE ADDR for RTCC MCHP  (reads)</span>
+<span class="n">SRAM_PTR</span>     <span class="o">=</span> <span class="mh">0x20</span>       <span class="c">#  pointer of the SRAM area (RTCC) </span>
+<span class="n">EEPROM_SR</span>    <span class="o">=</span> <span class="mh">0xff</span>       <span class="c">#  STATUS REGISTER in the  EEPROM</span>
+
+<span class="n">SEC</span>          <span class="o">=</span> <span class="mh">0x00</span>       <span class="c">#  address of SECONDS      register </span>
+<span class="n">MIN</span>          <span class="o">=</span> <span class="mh">0x01</span>       <span class="c">#  address of MINUTES      register </span>
+<span class="n">HOUR</span>         <span class="o">=</span> <span class="mh">0x02</span>       <span class="c">#  address of HOURS        register </span>
+<span class="n">DAY</span>          <span class="o">=</span> <span class="mh">0x03</span>       <span class="c">#  address of DAY OF WK    register </span>
+<span class="n">STAT</span>         <span class="o">=</span> <span class="mh">0x03</span>       <span class="c">#  address of STATUS       register </span>
+<span class="n">DATE</span>         <span class="o">=</span> <span class="mh">0x04</span>       <span class="c">#  address of DATE         register  </span>
+<span class="n">MNTH</span>         <span class="o">=</span> <span class="mh">0x05</span>       <span class="c">#  address of MONTH        register </span>
+<span class="n">YEAR</span>         <span class="o">=</span> <span class="mh">0x06</span>       <span class="c">#  address of YEAR         register </span>
+<span class="n">CTRL</span>         <span class="o">=</span> <span class="mh">0x07</span>       <span class="c">#  address of CONTROL      register </span>
+<span class="n">CAL</span>          <span class="o">=</span> <span class="mh">0x08</span>       <span class="c">#  address of CALIB        register </span>
+<span class="n">ULID</span>         <span class="o">=</span> <span class="mh">0x09</span>       <span class="c">#  address of UNLOCK ID    register</span>
+
+<span class="n">ALM0SEC</span>      <span class="o">=</span> <span class="mh">0x0a</span>       <span class="c">#  address of ALARM0 SEC   register </span>
+<span class="n">ALM0MIN</span>      <span class="o">=</span> <span class="mh">0x0b</span>       <span class="c">#  address of ALARM0 MIN   register </span>
+<span class="n">ALM0HR</span>       <span class="o">=</span> <span class="mh">0x0c</span>       <span class="c">#  address of ALARM0 HOUR  register </span>
+<span class="n">ALM0WDAY</span>	<span class="o">=</span> <span class="mh">0x0d</span>       <span class="c">#  address of ALARM0 CONTR register</span>
+<span class="n">ALM0DAT</span>      <span class="o">=</span> <span class="mh">0x0e</span>       <span class="c">#  address of ALARM0 DATE  register </span>
+<span class="n">ALM0MTH</span>      <span class="o">=</span> <span class="mh">0x0f</span>       <span class="c">#  address of ALARM0 MONTH register</span>
+
+<span class="n">ALM1SEC</span>      <span class="o">=</span> <span class="mh">0x11</span>       <span class="c">#  address of ALARM1 SEC   register </span>
+<span class="n">ALM1MIN</span>      <span class="o">=</span> <span class="mh">0x12</span>       <span class="c">#  address of ALARM1 MIN   register </span>
+<span class="n">ALM1HR</span>       <span class="o">=</span> <span class="mh">0x13</span>       <span class="c">#  address of ALARM1 HOUR  register </span>
+<span class="n">ALM1WDAY</span>      <span class="o">=</span> <span class="mh">0x14</span>       <span class="c">#  address of ALARM1 CONTR register</span>
+<span class="n">ALM1DAT</span>      <span class="o">=</span> <span class="mh">0x15</span>       <span class="c">#  address of ALARM1 DATE  register </span>
+<span class="n">ALM1MTH</span>      <span class="o">=</span> <span class="mh">0x16</span>       <span class="c">#  address of ALARM1 MONTH register</span>
+
+<span class="n">PWRDNMIN</span>     <span class="o">=</span> <span class="mh">0x18</span>       <span class="c">#  address of T_SAVER MIN(VDD-&gt;BAT)</span>
+<span class="n">PWRDNHOUR</span>    <span class="o">=</span> <span class="mh">0x19</span>       <span class="c">#  address of T_SAVER HR (VDD-&gt;BAT) </span>
+<span class="n">PWRDNDATE</span>    <span class="o">=</span> <span class="mh">0x1a</span>       <span class="c">#  address of T_SAVER DAT(VDD-&gt;BAT) </span>
+<span class="n">PWRDNMTH</span>     <span class="o">=</span> <span class="mh">0x1b</span>       <span class="c">#  address of T_SAVER MTH(VDD-&gt;BAT)</span>
+
+<span class="n">PWRUPMIN</span>     <span class="o">=</span> <span class="mh">0x1c</span>       <span class="c">#  address of T_SAVER MIN(BAT-&gt;VDD)</span>
+<span class="n">PWRUPHOUR</span>    <span class="o">=</span> <span class="mh">0x1d</span>       <span class="c">#  address of T_SAVER HR (BAT-&gt;VDD) </span>
+<span class="n">PWRUPDATE</span>    <span class="o">=</span> <span class="mh">0x1e</span>       <span class="c">#  address of T_SAVER DAT(BAT-&gt;VDD) </span>
+<span class="n">PWRUPMTH</span>     <span class="o">=</span> <span class="mh">0x1f</span>       <span class="c">#  address of T_SAVER MTH(BAT-&gt;VDD)</span>
+
+<span class="c">##################GLOBAL CONSTANTS RTCC - INITIALIZATION##################</span>
+
+<span class="n">PM</span>              <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  post-meridian bit (HOUR)</span>
+<span class="n">HOUR_FORMAT</span>     <span class="o">=</span>  <span class="mh">0x40</span>       <span class="c">#  Hour format</span>
+<span class="n">OUT_PIN</span>         <span class="o">=</span>  <span class="mh">0x80</span>       <span class="c">#  = b7 (CTRL)</span>
+<span class="n">SQWEN</span>            <span class="o">=</span>  <span class="mh">0x40</span>      <span class="c">#  SQWE = b6 (CTRL)</span>
+<span class="n">ALM_NO</span>          <span class="o">=</span>  <span class="mh">0x00</span>       <span class="c">#  no alarm activated        (CTRL)</span>
+<span class="n">ALM_0</span>           <span class="o">=</span>  <span class="mh">0x10</span>       <span class="c">#  ALARM0 is       activated (CTRL)</span>
+<span class="n">ALM_1</span>           <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  ALARM1 is       activated (CTRL)</span>
+<span class="n">ALM_01</span>          <span class="o">=</span>  <span class="mh">0x30</span>       <span class="c">#  both alarms are activated (CTRL)</span>
+<span class="n">MFP_01H</span>         <span class="o">=</span>  <span class="mh">0x00</span>       <span class="c">#  MFP = SQVAW(01 HERZ)      (CTRL)</span>
+<span class="n">MFP_04K</span>         <span class="o">=</span>  <span class="mh">0x01</span>       <span class="c">#  MFP = SQVAW(04 KHZ)       (CTRL)</span>
+<span class="n">MFP_08K</span>         <span class="o">=</span>  <span class="mh">0x02</span>       <span class="c">#  MFP = SQVAW(08 KHZ)       (CTRL)</span>
+<span class="n">MFP_32K</span>         <span class="o">=</span>  <span class="mh">0x03</span>       <span class="c">#  MFP = SQVAW(32 KHZ)       (CTRL)</span>
+<span class="n">MFP_64H</span>         <span class="o">=</span>  <span class="mh">0x04</span>       <span class="c">#  MFP = SQVAW(64 HERZ)      (CTRL)</span>
+
+<span class="n">ALMx_POL</span>        <span class="o">=</span>  <span class="mh">0x80</span>       <span class="c">#  polarity of MFP on alarm  (ALMxCTL)</span>
+<span class="n">ALMxC_SEC</span>       <span class="o">=</span>  <span class="mh">0x00</span>       <span class="c">#  ALARM compare on SEC      (ALMxCTL)</span>
+<span class="n">ALMxC_MIN</span>       <span class="o">=</span>  <span class="mh">0x10</span>       <span class="c">#  ALARM compare on MIN      (ALMxCTL)</span>
+<span class="n">ALMxC_HR</span>        <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  ALARM compare on HOUR     (ALMxCTL)</span>
+<span class="n">ALMxC_DAY</span>       <span class="o">=</span>  <span class="mh">0x30</span>       <span class="c">#  ALARM compare on DAY      (ALMxCTL)</span>
+<span class="n">ALMxC_DAT</span>       <span class="o">=</span>  <span class="mh">0x40</span>       <span class="c">#  ALARM compare on DATE     (ALMxCTL)</span>
+<span class="n">ALMxC_ALL</span>       <span class="o">=</span>  <span class="mh">0x70</span>       <span class="c">#  ALARM compare on all param(ALMxCTL)</span>
+<span class="n">ALMx_IF</span>         <span class="o">=</span>  <span class="mh">0x08</span>       <span class="c">#  MASK of the ALARM_IF      (ALMxCTL)</span>
+<span class="n">OSCON</span>           <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  State of the oscillator(running or not)</span>
+<span class="n">VBATEN</span>          <span class="o">=</span>  <span class="mh">0x08</span>       <span class="c">#  Enable battery for back-up</span>
+
+<span class="n">OSCRUN</span>          <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  State of the oscillator(running or not)</span>
+<span class="n">PWRFAIL</span>         <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">VBATEN</span>          <span class="o">=</span>  <span class="mh">0x08</span>       <span class="c">#  Enable battery for back-up</span>
+<span class="n">VBAT_DIS</span>        <span class="o">=</span>  <span class="mh">0x37</span>       <span class="c">#  Disable battery back-up</span>
+
+<span class="n">START_32KHZ</span>     <span class="o">=</span>  <span class="mh">0x80</span>       <span class="c">#  Start crystal: ST = b7 (SEC)</span>
+<span class="n">LP</span>              <span class="o">=</span>  <span class="mh">0x20</span>       <span class="c">#  Mask for the leap year bit(MONTH REG)</span>
+<span class="n">HOUR_12</span>         <span class="o">=</span>  <span class="mh">0x40</span>       <span class="c">#  12 hours format   (HOUR)</span>
+<span class="n">LPYR</span>            <span class="o">=</span>  <span class="mh">0x20</span>
+
+<span class="c">##################################################################################</span>
+<span class="n">ALM1MSK2</span>        <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">ALM1MSK1</span>        <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">ALM1MSK0</span>        <span class="o">=</span>   <span class="mh">0x10</span>
+
+<span class="n">ALM0MSK2</span>        <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">ALM0MSK1</span>        <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">ALM0MSK0</span>        <span class="o">=</span>   <span class="mh">0x10</span>
+
+
+<div class="viewcode-block" id="RTCC_Struct"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.RTCC_Struct">[docs]</a><span class="k">class</span> <span class="nc">RTCC_Struct</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> 
+	<span class="sd">&quot;&quot;&quot;RTCC time object.&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sec</span><span class="p">,</span><span class="nb">min</span><span class="p">,</span><span class="n">hour</span><span class="p">,</span><span class="n">weekday</span><span class="p">,</span><span class="n">date</span><span class="p">,</span><span class="n">month</span><span class="p">,</span><span class="n">year</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="n">sec</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="nb">min</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">hour</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">weekday</span> <span class="o">=</span> <span class="n">weekday</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="n">month</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">year</span>
+</div>
+<div class="viewcode-block" id="Alarm"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.Alarm">[docs]</a><span class="k">class</span> <span class="nc">Alarm</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class representation of Alarms for RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">ZERO</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="n">ONE</span> <span class="o">=</span> <span class="mi">2</span>
+	</div>
+<div class="viewcode-block" id="PMAM_t"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.PMAM_t">[docs]</a><span class="k">class</span> <span class="nc">PMAM_t</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class representation for PM/AM settings for RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">AMT</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">PMT</span> <span class="o">=</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="Match"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.Match">[docs]</a><span class="k">class</span> <span class="nc">Match</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class representation of Alarm match settings for RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">SECONDS_MATCH</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">MINUTES_MATCH</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="n">HOURS_MATCH</span> <span class="o">=</span> <span class="mi">2</span>
+	<span class="n">WEEKDAY_MATCH</span> <span class="o">=</span> <span class="mi">3</span>
+	<span class="n">DATE_MATCH</span> <span class="o">=</span> <span class="mi">4</span>
+	<span class="n">FULL_DATE_MATCH</span> <span class="o">=</span> <span class="mi">5</span>
+	</div>
+<div class="viewcode-block" id="Polarity"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.Polarity">[docs]</a><span class="k">class</span> <span class="nc">Polarity</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class representation of Polarity settings for RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">LOWPOL</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">HIGHPOL</span> <span class="o">=</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="Mode"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.Mode">[docs]</a><span class="k">class</span> <span class="nc">Mode</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class representation of Mode settings for RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">GPO</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">ALARM_INTERRUPT</span> <span class="o">=</span><span class="mi">1</span>
+	<span class="n">SQUARE_WAVE</span> <span class="o">=</span> <span class="mi">2</span>
+</div>
+<div class="viewcode-block" id="MCP79410"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410">[docs]</a><span class="k">class</span> <span class="nc">MCP79410</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Representation of an MCP79410 RTCC chip.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializes the RTCC object with the current local time.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">MCP79410address</span>
+		<span class="n">localtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+		<span class="n">rtc_time</span><span class="o">=</span><span class="n">RTCC_Struct</span><span class="p">(</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_sec</span><span class="p">,</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_min</span><span class="p">,</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_hour</span><span class="p">,</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_wday</span><span class="p">,</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_mday</span><span class="p">,</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_mon</span><span class="p">,(</span><span class="n">localtime</span><span class="o">.</span><span class="n">tm_year</span><span class="o">-</span><span class="mi">2000</span><span class="p">))</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">SetHourFormat</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">EnableVbat</span><span class="p">()</span>				<span class="c">#Enable the battery back-up	</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">EnableOscillator</span><span class="p">()</span>			<span class="c">#Start RTC clock</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">SetTime</span><span class="p">(</span><span class="n">rtc_time</span><span class="p">)</span>
+		
+<div class="viewcode-block" id="MCP79410.EnableOscillator"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.EnableOscillator">[docs]</a>	<span class="k">def</span> <span class="nf">EnableOscillator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enables the clock oscillator. This must be enabled in order for the RTCC to run.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">ST_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">);</span>      			<span class="c">#Read day + OSCON bit</span>
+		<span class="n">ST_bit</span> <span class="o">=</span> <span class="n">ST_bit</span> <span class="o">|</span> <span class="n">START_32KHZ</span><span class="p">;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">SEC</span><span class="p">,</span><span class="n">ST_bit</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.DisableOscillator"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.DisableOscillator">[docs]</a>	<span class="k">def</span> <span class="nf">DisableOscillator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Disables the clock oscillator.The RTCC does not operate once the oscillator is stopped.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">ST_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">);</span>      				<span class="c">#Read day + OSCON bit</span>
+		<span class="n">ST_bit</span> <span class="o">=</span> <span class="n">ST_bit</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">START_32KHZ</span><span class="p">;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">SEC</span><span class="p">,</span><span class="n">ST_bit</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.IsRunning"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.IsRunning">[docs]</a>	<span class="k">def</span> <span class="nf">IsRunning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the on-chip clock is running.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:returns: ClockStatus - TRUE if clock is running , FALSE otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">);</span>
+		<span class="k">if</span><span class="p">((</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="n">OSCRUN</span><span class="p">)</span> <span class="o">==</span> <span class="n">OSCRUN</span><span class="p">):</span>             			<span class="c">#If oscillator = already running, do nothing.</span>
+			<span class="k">return</span> <span class="bp">True</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">False</span>
+			</div>
+<div class="viewcode-block" id="MCP79410.GetTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetTime">[docs]</a>	<span class="k">def</span> <span class="nf">GetTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns a time object with the current time from the RTCC.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: current_time - This is an RTCC class object that contains the time. </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">SEC</span><span class="p">)</span> <span class="o">&amp;</span><span class="p">(</span><span class="o">~</span><span class="n">START_32KHZ</span><span class="p">))</span> <span class="c"># mask out ST bit</span>
+		<span class="n">minutes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">MIN</span><span class="p">))</span>
+		
+		<span class="n">hour_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">((</span><span class="n">hour_t</span> <span class="o">&amp;</span> <span class="n">HOUR_12</span><span class="p">)</span> <span class="o">==</span> <span class="n">HOUR_12</span><span class="p">):</span>
+			<span class="p">(</span><span class="n">hour_t</span> <span class="o">&amp;</span> <span class="mh">0x1F</span><span class="p">)</span> 
+		<span class="k">else</span><span class="p">:</span>
+			<span class="p">(</span><span class="n">hour_t</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span>
+			
+		<span class="n">hours</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span><span class="n">hour_t</span><span class="p">)</span>		
+		<span class="n">weekday</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">OSCRUN</span><span class="o">|</span><span class="n">PWRFAIL</span><span class="o">|</span><span class="n">VBATEN</span><span class="p">))</span>
+		<span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DATE</span><span class="p">))</span>   
+		<span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">MNTH</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">LPYR</span><span class="p">))</span>  
+		<span class="n">year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">YEAR</span><span class="p">))</span>
+		
+		<span class="n">rtc_time</span><span class="o">=</span><span class="n">RTCC_Struct</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span><span class="n">minutes</span><span class="p">,</span><span class="n">hours</span><span class="p">,</span><span class="n">weekday</span><span class="p">,</span><span class="n">date</span><span class="p">,</span><span class="n">month</span><span class="p">,</span><span class="n">year</span><span class="p">)</span>
+		
+		<span class="k">return</span> <span class="n">rtc_time</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.SetTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetTime">[docs]</a>	<span class="k">def</span> <span class="nf">SetTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">RTCtime</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializes the RTCC with a specific time contained in the time structure.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param RTCtime: RTCC class object that contains the time to be set.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">SEC</span><span class="p">)</span>		<span class="c">#Seconds</span>
+		<span class="nb">min</span> <span class="o">=</span> <span class="mi">0</span>								<span class="c">#Minutes</span>
+		<span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">)</span>		<span class="c">#Hours</span>
+		<span class="n">weekday</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">)</span>	<span class="c">#Weekday</span>
+		<span class="n">date</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>							<span class="c">#Date</span>
+		<span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">MNTH</span><span class="p">)</span>		<span class="c">#Month</span>
+		<span class="n">year</span> <span class="o">=</span> <span class="mi">0</span>							<span class="c">#Year</span>
+		
+		<span class="k">if</span><span class="p">((</span><span class="n">sec</span> <span class="o">&amp;</span> <span class="n">START_32KHZ</span><span class="p">)</span> <span class="o">==</span> <span class="n">START_32KHZ</span><span class="p">):</span>					<span class="c">#Seconds register</span>
+			<span class="n">sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">sec</span><span class="p">)</span><span class="o">|</span> <span class="n">START_32KHZ</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">sec</span><span class="p">)</span>
+		
+		<span class="nb">min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">min</span><span class="p">)</span>				<span class="c">#Minutes</span>
+	
+		<span class="k">if</span><span class="p">((</span> <span class="n">hour</span> <span class="o">&amp;</span> <span class="n">HOUR_12</span><span class="p">)</span> <span class="o">==</span>  <span class="n">HOUR_12</span><span class="p">):</span>				<span class="c">#Hour register</span>
+			<span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span> <span class="o">|</span> <span class="n">HOUR_12</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span>
+	
+		<span class="k">if</span><span class="p">((</span> <span class="n">hour</span> <span class="o">&amp;</span> <span class="n">PM</span><span class="p">)</span> <span class="o">==</span>  <span class="n">PM</span><span class="p">):</span>
+			<span class="n">hour</span> <span class="o">=</span> <span class="n">hour</span> <span class="o">|</span> <span class="n">PM</span>
+		
+		<span class="n">weekday</span> <span class="o">&amp;=</span> <span class="mh">0x38</span>											<span class="c">#Mask 3 upper bits</span>
+		<span class="n">weekday</span> <span class="o">|=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">weekday</span><span class="p">)</span> 			<span class="c">#Weekday	</span>
+		<span class="n">date</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>					<span class="c">#Date</span>
+	
+		<span class="k">if</span><span class="p">((</span><span class="n">month</span> <span class="o">&amp;</span> <span class="n">LPYR</span><span class="p">)</span> <span class="o">==</span> <span class="n">LPYR</span><span class="p">):</span>								<span class="c">#Month </span>
+			<span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">month</span><span class="p">)</span> <span class="o">|</span> <span class="n">LPYR</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">month</span><span class="p">)</span>
+			
+		<span class="n">year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">RTCtime</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>					<span class="c">#Year</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">SEC</span><span class="p">,</span><span class="n">sec</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">MIN</span><span class="p">,</span><span class="nb">min</span><span class="p">)</span>  
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">,</span><span class="n">hour</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">,</span><span class="n">weekday</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">DATE</span><span class="p">,</span><span class="n">date</span><span class="p">)</span>  
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">MNTH</span><span class="p">,</span><span class="n">month</span><span class="p">)</span>   
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">YEAR</span><span class="p">,</span><span class="n">year</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MCP79410.SetHourFormat"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetHourFormat">[docs]</a>	<span class="k">def</span>  <span class="nf">SetHourFormat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">format</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the hour format according to standard or military format.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param format:  Type of format is either 24 or 12.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">DisableOscillator</span><span class="p">()</span>						<span class="c">#Disable clock</span>
+		<span class="n">Format_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">)</span>			<span class="c">#Read hour format bit	</span>
+		
+		<span class="k">if</span><span class="p">(</span><span class="n">format</span> <span class="o">==</span> <span class="mi">24</span><span class="p">):</span>
+			<span class="n">Format_bit</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">HOUR_FORMAT</span>					<span class="c">#Set format to H24 (military) </span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">Format_bit</span> <span class="o">|=</span> <span class="n">HOUR_FORMAT</span>					<span class="c">#Set format to H12</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">,</span><span class="n">Format_bit</span><span class="p">)</span>				<span class="c">#START bit is located in the Sec register</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">EnableOscillator</span><span class="p">()</span>							<span class="c">#Enable clock</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.SetPMAM"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetPMAM">[docs]</a>	<span class="k">def</span> <span class="nf">SetPMAM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meridian</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the meridian mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param meridian: PMAM_t object ,either PMT or AMT settings</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">DisableOscillator</span><span class="p">()</span>						<span class="c">#Diable clock</span>
+		<span class="n">PMAM_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">)</span>				<span class="c">#Read meridian bit	</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">meridian</span> <span class="o">==</span> <span class="n">PMAM_t</span><span class="o">.</span><span class="n">AMT</span><span class="p">):</span>
+			<span class="n">PMAM_bit</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">PM</span>								<span class="c">#Set AM</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">PMAM_bit</span> <span class="o">|=</span> <span class="n">PM</span>								<span class="c">#Set PM</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">,</span><span class="n">PMAM_bit</span><span class="p">)</span>				<span class="c">#Update PM/AM meridian bit</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">EnableOscillator</span><span class="p">();</span>						<span class="c">#Enable clock</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.GetPMAM"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetPMAM">[docs]</a>	<span class="k">def</span> <span class="nf">GetPMAM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get AM or PM for 12 hour format.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:returns: meridian - PM/AM flag</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bHourBuffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">HOUR</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">bHourBuffer</span> <span class="o">&amp;</span> <span class="mh">0x20</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.EnableAlarm"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.EnableAlarm">[docs]</a>	<span class="k">def</span> <span class="nf">EnableAlarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alarm</span><span class="p">,</span><span class="n">config</span><span class="p">):</span>				<span class="c">#dest = RTCC_ALM0/RTCC_ALM1</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enables the chosen alarm.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param alarm: Alarm object , One of the two alarms, ZERO or ONE.</span>
+<span class="sd">		:param config:</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="n">ALARMREG</span> <span class="o">=</span> <span class="p">(</span><span class="n">control</span> <span class="o">|</span> <span class="n">ALM_0</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">ALARMREG</span> <span class="o">=</span> <span class="p">(</span><span class="n">control</span> <span class="o">|</span> <span class="n">ALM_1</span><span class="p">)</span>
+			
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">control</span><span class="p">)</span>				<span class="c">#enable alarm control bit		</span>
+		<span class="n">day</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">control</span><span class="p">)</span>				<span class="c">#Set address to the alarm config/day register </span>
+		<span class="n">AlmarmCfg</span> <span class="o">=</span> <span class="p">((</span><span class="n">day</span> <span class="o">&amp;</span> <span class="mh">0x07</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">config</span> <span class="o">&amp;</span> <span class="mh">0xF0</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALARMREG</span><span class="p">,</span><span class="n">AlmarmCfg</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.DisableAlarm"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.DisableAlarm">[docs]</a>	<span class="k">def</span> <span class="nf">DisableAlarm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alarm</span><span class="p">):</span>						<span class="c">#alarm = RTCC_ALM0/RTCC_ALM1</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Disables one of the two alarms. </span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param alarm: Alarm object , One of the two alarms, ZERO or ONE.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">)</span>					<span class="c">#read control register</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="n">cfg</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="mh">0xEF</span><span class="p">)</span>							<span class="c">#disables either Alrm1 or Alrm0</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cfg</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="mh">0xDF</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">cfg</span><span class="p">)</span>					<span class="c">#update control register</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.GetAlarmStatus"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetAlarmStatus">[docs]</a>	<span class="k">def</span> <span class="nf">GetAlarmStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the status of the alarm interrupt flag.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param alarm: One of the two alarms, ZERO or ONE.</span>
+<span class="sd">		:returns: status - TRUE if alarm enabled , FALSE if disabled.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>		
+			<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">)</span>			<span class="c">#Read WKDAY register for ALRAM 0  </span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">)</span>			<span class="c">#Read WKDAY register for ALRAM 1</span>
+		
+		<span class="k">if</span> <span class="p">((</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="n">ALMx_IF</span><span class="p">)</span> <span class="o">==</span> <span class="n">ALMx_IF</span><span class="p">):</span> 
+			<span class="k">return</span> <span class="bp">True</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">False</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.ClearInterruptFlag"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.ClearInterruptFlag">[docs]</a>	<span class="k">def</span> <span class="nf">ClearInterruptFlag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Selects which alarm Interrupt flag should be cleared.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param alarm: One of the two alarms</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">)</span>			<span class="c">#Read WKDAY register for ALRAM 0   </span>
+			<span class="n">temp</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="o">~</span><span class="n">ALMx_IF</span><span class="p">)</span>							<span class="c">#Clear 4-th bit </span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">,</span><span class="n">temp</span><span class="p">)</span>			<span class="c">#Enable backup battery mode</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">)</span>			<span class="c">#Read WKDAY register for ALRAM 1</span>
+			<span class="n">temp</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="o">~</span><span class="n">ALMx_IF</span><span class="p">)</span>							<span class="c">#Clear 4-th bit</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">,</span><span class="n">temp</span><span class="p">)</span>			<span class="c">#Enable backup battery mode</span>
+
+	</div>
+<div class="viewcode-block" id="MCP79410.SetAlarmTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetAlarmTime">[docs]</a>	<span class="k">def</span> <span class="nf">SetAlarmTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the alarm time for one of the two alarms.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param time: RTCC Class encapsulating time settings. </span>
+<span class="sd">		:param alarm:  One of the two alarms,either alarm ZERO or ONE.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>	
+		<span class="n">sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">sec</span><span class="p">);</span>
+		<span class="nb">min</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">);</span>
+		<span class="n">hour</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">hour</span><span class="p">);</span>
+		<span class="n">weekday</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">weekday</span><span class="p">);</span>
+		<span class="n">date</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">date</span><span class="p">);</span>
+		<span class="n">month</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">dec2bcd</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">month</span><span class="p">);</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0SEC</span><span class="p">,</span><span class="n">sec</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0MIN</span><span class="p">,</span><span class="n">hour</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0HR</span><span class="p">,</span><span class="n">weekday</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">,</span><span class="n">date</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0DAT</span><span class="p">,</span><span class="n">month</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0MTH</span><span class="p">,</span><span class="n">month</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1SEC</span><span class="p">,</span><span class="n">sec</span><span class="o">|</span><span class="n">START_32KHZ</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1MIN</span><span class="p">,</span><span class="nb">min</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1HR</span><span class="p">,</span><span class="n">hour</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">,</span><span class="n">weekday</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1DAT</span><span class="p">,</span><span class="n">date</span><span class="p">)</span> 
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1MTH</span><span class="p">,</span><span class="n">month</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.GetAlarmTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetAlarmTime">[docs]</a>	<span class="k">def</span> <span class="nf">GetAlarmTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get the alarm time for one of the two alarms.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param time: RTCC object</span>
+<span class="sd">		:param alarm: One of the two alarms</span>
+<span class="sd">		:returns: alarm time</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALARMREG</span><span class="p">,</span><span class="n">sec</span><span class="p">)</span>
+		<span class="n">hours</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALARMREG</span><span class="p">,</span><span class="n">hour</span><span class="p">)</span>
+		<span class="n">AlarmDay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALARMREG</span><span class="p">,</span><span class="n">day</span><span class="p">)</span>
+		<span class="n">AlarmDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALARMREG</span><span class="p">,</span><span class="n">date</span><span class="p">)</span>
+		<span class="n">alarmTime</span><span class="o">=</span><span class="n">RTCC_Struct</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span><span class="n">minutes</span><span class="p">,</span><span class="n">hours</span><span class="p">,</span><span class="n">AlarmDay</span><span class="p">,</span><span class="n">AlarmDate</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">alarmTime</span>
+	</div>
+<div class="viewcode-block" id="MCP79410.SetAlarmMFPPolarity"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetAlarmMFPPolarity">[docs]</a>	<span class="k">def</span> <span class="nf">SetAlarmMFPPolarity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">MFP_pol</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get the alarm time on the reg.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param MFP_pol:   Multi function pin polarity</span>
+<span class="sd">		:param alarm:  One of the two alarms</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">Polarity_bit</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>	
+		<span class="k">if</span><span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="n">Polarity_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">)</span>      <span class="c">#Read hour format bit	</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">Polarity_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">)</span>      <span class="c">#Read hour format bit	</span>
+		
+		<span class="k">if</span><span class="p">(</span><span class="n">MFP_pol</span> <span class="o">==</span> <span class="n">Polarity</span><span class="o">.</span><span class="n">LOWPOL</span><span class="p">):</span>
+			<span class="n">Polarity_bit</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">ALMx_POL</span>			<span class="c">#Set MFP LOW</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">Polarity_bit</span> <span class="o">|=</span> <span class="n">ALMx_POL</span>			<span class="c">#Set MFP HIGH</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM0WDAY</span><span class="p">,</span><span class="n">Polarity_bit</span><span class="p">)</span>		<span class="c">#Update polarity bit for Alarm 0</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">ALM1WDAY</span><span class="p">,</span><span class="n">Polarity_bit</span><span class="p">)</span>		<span class="c">#Update polarity bit for Alarm 1</span>
+
+		</div>
+<div class="viewcode-block" id="MCP79410.SetAlarmMatch"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetAlarmMatch">[docs]</a>	<span class="k">def</span> <span class="nf">SetAlarmMatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span><span class="n">alarm</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get the alarm time on the reg.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param match: second, hour or mintue match from Match class</span>
+<span class="sd">		:param alarm: one of the two alarms</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">AlarmRegister</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">alarm</span> <span class="o">==</span> <span class="n">Alarm</span><span class="o">.</span><span class="n">ZERO</span><span class="p">):</span>	
+			<span class="n">AlarmRegister</span> <span class="o">=</span> <span class="n">ALM0WDAY</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">AlarmRegister</span> <span class="o">=</span> <span class="n">ALM1WDAY</span>
+	
+		<span class="n">match_bits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">SECONDS_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">ALM0MSK2</span><span class="o">|</span><span class="n">ALM0MSK1</span><span class="o">|</span><span class="n">ALM0MSK0</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Minutes match</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">MINUTES_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Minutes match</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">HOURS_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK1</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Hours match</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">WEEKDAY_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK1</span><span class="o">|</span><span class="n">ALM0MSK0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Day of week match</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">DATE_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK2</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Date match</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="n">Match</span><span class="o">.</span><span class="n">FULL_DATE_MATCH</span><span class="p">):</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK2</span><span class="o">|</span><span class="n">ALM0MSK1</span><span class="o">|</span><span class="n">ALM0MSK0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Sec, Minutes Hours, Date match</span>
+		<span class="k">else</span> <span class="p">:</span>
+			<span class="n">match_bits</span> <span class="o">|=</span> <span class="n">ALM0MSK0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">AlarmRegister</span><span class="p">,</span><span class="n">match_bits</span><span class="p">)</span>	<span class="c">#Minutes match</span>
+			
+	</div>
+<div class="viewcode-block" id="MCP79410.SetMFP_Functionality"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetMFP_Functionality">[docs]</a>	<span class="k">def</span> <span class="nf">SetMFP_Functionality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This function sets the MFP pin mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mode: Mode of the MFP pin.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MFP_bits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">)</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="n">mode</span> <span class="o">==</span>	<span class="n">Mode</span><span class="o">.</span><span class="n">GPO</span><span class="p">):</span>				<span class="c">#For GPO clear SQWEN, ALM0EN, ALM1EN</span>
+			<span class="n">MFP_bits</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">SQWEN</span><span class="o">|</span><span class="n">ALM_0</span><span class="o">|</span><span class="n">ALM_1</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">MFP_bits</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span>	<span class="n">Mode</span><span class="o">.</span><span class="n">ALARM_INTERRUPT</span><span class="p">):</span> 	<span class="c">#For ALARM Interrupts clear SQWEN and set either ALM0EN or ALM1EN</span>
+			<span class="n">MFP_bits</span> <span class="o">&amp;=</span> <span class="n">SQWEN</span>
+			<span class="n">MFP_bits</span> <span class="o">|=</span> <span class="n">ALM_0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">MFP_bits</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span>	<span class="n">Mode</span><span class="o">.</span><span class="n">SQUARE_WAVE</span><span class="p">)</span> <span class="p">:</span>		<span class="c">#For SQUARE WAVE set SQWEN </span>
+			<span class="n">MFP_bits</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">ALM_0</span><span class="o">|</span><span class="n">ALM_1</span><span class="p">)</span>
+			<span class="n">MFP_bits</span> <span class="o">|=</span> <span class="n">SQWEN</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">MFP_bits</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>								<span class="c">#ALARM Interrupts </span>
+			<span class="n">MFP_bits</span> <span class="o">&amp;=</span> <span class="n">SQWEN</span>
+			<span class="n">MFP_bits</span> <span class="o">|=</span> <span class="n">ALM_0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">MFP_bits</span><span class="p">)</span>
+
+	</div>
+<div class="viewcode-block" id="MCP79410.SetMFP_GPOStatus"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.SetMFP_GPOStatus">[docs]</a>	<span class="k">def</span> <span class="nf">SetMFP_GPOStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">status</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the MFP output logic level when the pin is configured as GPO </span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param status: Polarity of MFP pin , Asserted output state of MFP is a logic low level for LOW and opposite for HIGH</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">gpo_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">)</span>		<span class="c">#General Purpose Output mode only available when (SQWEN = 0, ALM0EN = 0, and ALM1EN = 0):</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">LOW</span><span class="p">):</span>		
+			<span class="n">gpo_bit</span> <span class="o">=</span> <span class="n">OUT_PIN</span>				<span class="c">#MFP signal level is logic low</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">gpo_bit</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>								<span class="c">#MFP signal level is logic high</span>
+			<span class="n">gpo_bit</span> <span class="o">|=</span> <span class="n">OUT_PIN</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">CTRL</span><span class="p">,</span><span class="n">gpo_bit</span><span class="p">)</span>	
+	
+	</div>
+<div class="viewcode-block" id="MCP79410.CheckPowerFailure"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.CheckPowerFailure">[docs]</a>	<span class="k">def</span> <span class="nf">CheckPowerFailure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if there was a power failure.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: PowerFail - TRUE if there was a power failure, FALSE otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">PowerFailure_bit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">);</span>     <span class="c">#Read meridian bit	</span>
+		<span class="n">PowerFail</span> <span class="o">=</span> <span class="mi">0</span>
+	
+		<span class="k">if</span><span class="p">((</span><span class="n">PowerFailure_bit</span> <span class="o">&amp;</span> <span class="n">PWRFAIL</span><span class="p">)</span>  <span class="o">==</span> <span class="n">PWRFAIL</span><span class="p">):</span>
+			<span class="n">PowerFail</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">PowerFail</span> <span class="o">=</span> <span class="mi">0</span>
+		
+		<span class="n">PowerFailure_bit</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">PWRFAIL</span>			<span class="c">#Clear Power failure bit</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">,</span><span class="n">PowerFailure_bit</span><span class="p">)</span>		<span class="c">#Update PM/AM meridian bit</span>
+		<span class="k">return</span> <span class="n">PowerFail</span>
+				</div>
+<div class="viewcode-block" id="MCP79410.IsVBatEnabled"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.IsVBatEnabled">[docs]</a>	<span class="k">def</span> <span class="nf">IsVBatEnabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>	
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Check if the VBAT is enabled.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: status - True is battery mode is enabled , False otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">)</span>		<span class="c">#The 3rd bit of the RTCC_RTCC day register controls VBATEN   	</span>
+		<span class="k">if</span><span class="p">((</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="n">VBATEN</span><span class="p">)</span> <span class="o">==</span> <span class="n">VBATEN</span><span class="p">):</span>
+			<span class="k">return</span> <span class="bp">True</span><span class="p">;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">False</span><span class="p">;</span>
+			</div>
+<div class="viewcode-block" id="MCP79410.EnableVbat"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.EnableVbat">[docs]</a>	<span class="k">def</span> <span class="nf">EnableVbat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enables battery backup mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">)</span>		<span class="c">#The 3rd bit of the RTCC_RTCC day register controls VBATEN   </span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">|</span> <span class="n">VBATEN</span><span class="p">)</span>				<span class="c">#Set 3rd bit to enable backup battery mode</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">,</span><span class="n">temp</span><span class="p">)</span>		<span class="c">#Enable backup battery mode</span>
+</div>
+<div class="viewcode-block" id="MCP79410.DisableVbat"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.DisableVbat">[docs]</a>	<span class="k">def</span> <span class="nf">DisableVbat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Disables the backup battery functionality.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">)</span>			<span class="c">#The 3rd bit of the RTCC_RTCC day register controls VBATEN   </span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="n">VBAT_DIS</span><span class="p">)</span>			<span class="c">#Clear 3rd bit to disable backup battery mode</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">DAY</span><span class="p">,</span><span class="n">temp</span><span class="p">)</span>			<span class="c">#Enable backup battery mode	</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.GetPowerUpTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetPowerUpTime">[docs]</a>	<span class="k">def</span> <span class="nf">GetPowerUpTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the time the system powered up.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: powerup_time - Power up time structure.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">powerup_time</span> <span class="o">=</span> <span class="n">RTCC_Struct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">powerup_time</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRUPMIN</span><span class="p">))</span>    
+		<span class="n">powerup_time</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRUPHOUR</span><span class="p">))</span>
+		<span class="n">powerup_time</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRUPDATE</span><span class="p">))</span>   
+		<span class="n">powerup_time</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRUPMTH</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">powerup_time</span>
+	
+		</div>
+<div class="viewcode-block" id="MCP79410.GetPowerDownTime"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.GetPowerDownTime">[docs]</a>	<span class="k">def</span> <span class="nf">GetPowerDownTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This function returns the power-down time of the system.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: powerdown_time - Power down time structure.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">powerdown_time</span> <span class="o">=</span> <span class="n">RTCC_Struct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">powerdown_time</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRDNMIN</span><span class="p">))</span>   
+		<span class="n">powerdown_time</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRDNHOUR</span><span class="p">))</span>
+		<span class="n">powerdown_time</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRDNDATE</span><span class="p">))</span>
+		<span class="n">powerdown_time</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcd2dec</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">PWRDNMTH</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">powerdown_time</span>
+
+<span class="c">##################################################################################################</span></div>
+<div class="viewcode-block" id="MCP79410.dec2bcd"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.dec2bcd">[docs]</a>	<span class="k">def</span> <span class="nf">dec2bcd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Convert the value from decimal to Binary Coded Decimal (BCD).</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param num: Number to convert to BCD</span>
+<span class="sd">		:returns: bcd - BCD representation of number.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">((</span><span class="n">num</span><span class="o">/</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="MCP79410.bcd2dec"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.bcd2dec">[docs]</a>	<span class="k">def</span> <span class="nf">bcd2dec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Convert the value from Binary Coded Decimal (BCD) to Decimal.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param num: Number to convert to decimal.</span>
+<span class="sd">		:returns: dec - Decimal representation of number.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">((</span><span class="n">num</span><span class="o">/</span><span class="mi">16</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">16</span><span class="p">))</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.bcdtobin"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.bcdtobin">[docs]</a>	<span class="k">def</span> <span class="nf">bcdtobin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Convert the value from BCD to binary.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param num:  Number to convert to binary.</span>
+<span class="sd">		:returns: bin - Binary representation of number.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">(((</span><span class="n">num</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0f</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">num</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MCP79410.writeRegister"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.writeRegister">[docs]</a>	<span class="k">def</span> <span class="nf">writeRegister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rtcc_reg</span><span class="p">,</span><span class="n">dat</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write a new value on the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param rtcc_reg: Address of the register.</span>
+<span class="sd">		:param dat:  Byte value to be written on the register.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">rtcc_reg</span><span class="p">,</span> <span class="n">dat</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MCP79410.readRegister"><a class="viewcode-back" href="../mcp79410.html#MCP79410RTCC.MCP79410.readRegister">[docs]</a>	<span class="k">def</span> <span class="nf">readRegister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rtcc_reg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the value of the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param rtcc_reg: Address of the register.</span>
+<span class="sd">		:returns: Register byte content </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">read_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">rtcc_reg</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+		<span class="k">return</span> <span class="n">result</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

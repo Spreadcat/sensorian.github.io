@@ -1,0 +1,473 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MPL3115A2 &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for MPL3115A2</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;D.Qendri&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2015 Sensorian&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;GPL V3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">smbus</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">MPL</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">&quot;./libMPL.so&quot;</span><span class="p">)</span>
+
+<span class="n">MPL3115A2_ADDRESS</span>  <span class="o">=</span> <span class="mh">0x60</span> 			<span class="c">#7-bit I2C address for sensor</span>
+
+<span class="c">#Sensor Memory map</span>
+<span class="n">STATUS</span>             <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">OUT_P_MSB</span>          <span class="o">=</span>  <span class="mh">0x01</span>        
+<span class="n">OUT_P_CSB</span>          <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">OUT_P_LSB</span>          <span class="o">=</span>  <span class="mh">0x03</span>
+<span class="n">OUT_T_MSB</span>          <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">OUT_T_LSB</span>          <span class="o">=</span>  <span class="mh">0x05</span>
+<span class="n">DR_STATUS</span>          <span class="o">=</span>  <span class="mh">0x06</span>
+<span class="n">OUT_P_DELTA_MSB</span>    <span class="o">=</span>  <span class="mh">0x07</span>
+<span class="n">OUT_P_DELTA_CSB</span>    <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">OUT_P_DELTA_LSB</span>    <span class="o">=</span>  <span class="mh">0x09</span>
+<span class="n">OUT_T_DELTA_MSB</span>    <span class="o">=</span>  <span class="mh">0x0A</span>
+<span class="n">OUT_T_DELTA_LSB</span>    <span class="o">=</span>  <span class="mh">0x0B</span>
+<span class="n">WHO_AM_I</span>           <span class="o">=</span>  <span class="mh">0x0C</span>
+<span class="n">F_STATUS</span>           <span class="o">=</span>  <span class="mh">0x0D</span>
+<span class="n">F_DATA</span>             <span class="o">=</span>  <span class="mh">0x0E</span>
+<span class="n">F_SETUP</span>            <span class="o">=</span>  <span class="mh">0x0F</span>
+<span class="n">TIME_DLY</span>           <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">SYSMOD</span>             <span class="o">=</span>  <span class="mh">0x11</span>
+<span class="n">INT_SOURCE</span>         <span class="o">=</span>  <span class="mh">0x12</span>
+<span class="n">PT_DATA_CFG</span>        <span class="o">=</span>  <span class="mh">0x13</span>
+<span class="n">BAR_IN_MSB</span>         <span class="o">=</span>  <span class="mh">0x14</span>
+<span class="n">BAR_IN_LSB</span>         <span class="o">=</span>  <span class="mh">0x15</span>
+<span class="n">P_TGT_MSB</span>          <span class="o">=</span>  <span class="mh">0x16</span>
+<span class="n">P_TGT_LSB</span>          <span class="o">=</span>  <span class="mh">0x17</span>
+<span class="n">T_TGT</span>              <span class="o">=</span>  <span class="mh">0x18</span>
+<span class="n">P_WND_MSB</span>          <span class="o">=</span>  <span class="mh">0x19</span>
+<span class="n">P_WND_LSB</span>          <span class="o">=</span>  <span class="mh">0x1A</span>
+<span class="n">T_WND</span>              <span class="o">=</span>  <span class="mh">0x1B</span>
+<span class="n">P_MIN_MSB</span>          <span class="o">=</span>  <span class="mh">0x1C</span>
+<span class="n">P_MIN_CSB</span>          <span class="o">=</span>  <span class="mh">0x1D</span>
+<span class="n">P_MIN_LSB</span>          <span class="o">=</span>  <span class="mh">0x1E</span>
+<span class="n">T_MIN_MSB</span>          <span class="o">=</span>  <span class="mh">0x1F</span>
+<span class="n">T_MIN_LSB</span>          <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">P_MAX_MSB</span>          <span class="o">=</span>  <span class="mh">0x21</span>
+<span class="n">P_MAX_CSB</span>          <span class="o">=</span>  <span class="mh">0x22</span>
+<span class="n">P_MAX_LSB</span>          <span class="o">=</span>  <span class="mh">0x23</span>
+<span class="n">T_MAX_MSB</span>          <span class="o">=</span>  <span class="mh">0x24</span>
+<span class="n">T_MAX_LSB</span>          <span class="o">=</span>  <span class="mh">0x25</span>
+<span class="n">CTRL_REG1</span>          <span class="o">=</span>  <span class="mh">0x26</span>
+<span class="n">CTRL_REG2</span>          <span class="o">=</span>  <span class="mh">0x27</span>
+<span class="n">CTRL_REG3</span>          <span class="o">=</span>  <span class="mh">0x28</span>
+<span class="n">CTRL_REG4</span>          <span class="o">=</span>  <span class="mh">0x29</span>
+<span class="n">CTRL_REG5</span>          <span class="o">=</span>  <span class="mh">0x2A</span>
+<span class="n">OFF_P</span>              <span class="o">=</span>  <span class="mh">0x2B</span>
+<span class="n">OFF_T</span>              <span class="o">=</span>  <span class="mh">0x2C</span>
+<span class="n">OFF_H</span>              <span class="o">=</span>  <span class="mh">0x2D</span>
+
+
+
+<span class="c">#*********************Status **************************************/</span>
+<span class="n">PTDR</span>    <span class="o">=</span> <span class="mh">0x04</span>      <span class="c">#Pressure/Altitude OR Temperature data ready</span>
+<span class="n">PDR</span>     <span class="o">=</span> <span class="mh">0x02</span>      <span class="c">#Pressure/Altitude new data available</span>
+<span class="n">TDR</span>     <span class="o">=</span> <span class="mh">0x01</span>      <span class="c">#Temperature new Data Available.</span>
+
+
+<span class="c">#*********************Control Register 1****************************/</span>
+<span class="n">ALT</span>    <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">RAW</span>    <span class="o">=</span>  <span class="mh">0x40</span>
+<span class="n">OS2</span>    <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">OS1</span>    <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">OS0</span>    <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">RST</span>    <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">OST</span>    <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">SBYB</span>   <span class="o">=</span>  <span class="mh">0x01</span>        <span class="c">#Active mode</span>
+
+<span class="c"># Oversample Ratio 1</span>
+<span class="n">OS_1</span>   <span class="o">=</span> <span class="mh">0x00</span>                   <span class="c">#  6 ms min between samples</span>
+<span class="n">OS_2</span>   <span class="o">=</span> <span class="n">OS0</span>					<span class="c">#  10 ms</span>
+<span class="n">OS_4</span>   <span class="o">=</span> <span class="n">OS1</span>					<span class="c">#  18 ms</span>
+<span class="n">OS_8</span>   <span class="o">=</span> <span class="n">OS1</span> <span class="o">|</span> <span class="n">OS0</span>              <span class="c">#  34 ms</span>
+<span class="n">OS_16</span>  <span class="o">=</span> <span class="n">OS2</span>                    <span class="c">#  66 ms</span>
+<span class="n">OS_32</span>  <span class="o">=</span> <span class="n">OS2</span> <span class="o">|</span> <span class="n">OS0</span>              <span class="c"># 130 ms</span>
+<span class="n">OS_64</span>  <span class="o">=</span> <span class="n">OS2</span> <span class="o">|</span> <span class="n">OS1</span>              <span class="c"># 258 ms</span>
+<span class="n">OS_128</span> <span class="o">=</span> <span class="n">OS2</span> <span class="o">|</span> <span class="n">OS1</span> <span class="o">|</span> <span class="n">OS2</span>        <span class="c"># 512 ms</span>
+
+<span class="n">BAR_MASK</span>        <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">ALT_MASK</span>        <span class="o">=</span> <span class="mh">0xEF</span>
+<span class="n">ACTIVE_MASK</span>     <span class="o">=</span> <span class="mh">0xF1</span>
+<span class="n">STANDBY_MASK</span>    <span class="o">=</span> <span class="mh">0xFE</span>
+
+
+<span class="c">#*********************Control Register 5****************************/</span>
+
+<span class="n">DISABLED</span>    <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CIRCULAR</span>    <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">FULL_STOP</span>   <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">F_MODE</span>      <span class="o">=</span> <span class="n">DISABLED</span>
+<span class="c">#*****************PT_DATA_CFG - Sensor data event flag register***********/</span>
+<span class="n">DREM</span>     	<span class="o">=</span> <span class="mh">0x04</span>			<span class="c"># Data Ready Event Mode</span>
+<span class="n">PDEFE</span>    	<span class="o">=</span> <span class="mh">0x02</span> 			<span class="c"># Pressure Data Event Flag Enabled</span>
+<span class="n">TDEFE</span>    	<span class="o">=</span> <span class="mh">0x01</span> 			<span class="c"># Temperature Data Event Flag Enabled</span>
+
+<div class="viewcode-block" id="MPL3115A2"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2">[docs]</a><span class="k">class</span> <span class="nc">MPL3115A2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializes I2C bus if not initizalized and configures sensor in active mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">MPL3115A2_ADDRESS</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">I2C_Initialize</span><span class="p">()</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_Initialize</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MPL3115A2.GetMode"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.GetMode">[docs]</a>	<span class="k">def</span> <span class="nf">GetMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return a bool value indicating wheather the sensor is in Active or Standby mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: Mode - 1 if in Active mode, 0 otherwise</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_Mode</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.GetID"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.GetID">[docs]</a>	<span class="k">def</span> <span class="nf">GetID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the Factory Sensor ID.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: id - Factory ID</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">a</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ID</span><span class="p">()</span>
+		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.ReadBarometricPressure"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ReadBarometricPressure">[docs]</a>	<span class="k">def</span> <span class="nf">ReadBarometricPressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Reads the current pressure in Pa.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: current pressure or -1 if no new data is available</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c"># return sensor.MPL3115A2_ReadBarometricPressure()</span>
+		<span class="n">status</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">STATUS</span><span class="p">)</span>
+		
+		<span class="c">#Check PDR bit, if it&#39;s not set then toggle OST</span>
+		<span class="k">if</span><span class="p">((</span><span class="n">status</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span> <span class="n">PDR</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span> 	
+			<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ToggleOneShot</span><span class="p">()</span>		<span class="c">#Toggle the OST bit causing the sensor to immediately take another reading</span>
+		
+		<span class="n">m_pressure</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_MSB</span><span class="p">)</span>
+		<span class="n">c_pressure</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_CSB</span><span class="p">)</span>
+		<span class="n">l_pressure</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_LSB</span><span class="p">)</span>
+		<span class="n">pressure_whole</span> <span class="o">=</span> <span class="nb">long</span> <span class="p">(</span><span class="n">m_pressure</span><span class="o">&lt;&lt;</span><span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="nb">long</span><span class="p">(</span><span class="n">c_pressure</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="nb">long</span> <span class="p">(</span><span class="n">l_pressure</span><span class="p">)</span>			<span class="c"># Pressure comes back as a left shifted 20 bit number</span>
+		<span class="n">pressure_whole</span> <span class="o">&gt;&gt;=</span> <span class="mi">6</span>                       						<span class="c">#Pressure is an 18 bit number with 2 bits of decimal. Get rid of decimal portion.</span>
+		<span class="n">c_pressure</span> <span class="o">&amp;=</span> <span class="mi">0</span><span class="n">b00110000</span>                         				<span class="c"># Bits 5/4 represent the fractional component</span>
+		<span class="n">c_pressure</span> <span class="o">&gt;&gt;=</span> <span class="mi">4</span>                                  				<span class="c"># Get it right aligned</span>
+		<span class="n">pressure_decimal</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(((</span><span class="n">c_pressure</span><span class="o">&amp;</span><span class="mh">0x30</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">)</span><span class="o">/</span><span class="mf">4.0</span><span class="p">)</span> 			<span class="c"># Turn it into fraction</span>
+		<span class="n">pressure</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pressure_whole</span> <span class="o">+</span> <span class="n">pressure_decimal</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">pressure</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.ReadTemperature"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ReadTemperature">[docs]</a>	<span class="k">def</span> <span class="nf">ReadTemperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Reads the current temperature in degrees Celcius.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: temp - Returns temperature as a float.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c"># return sensor.MPL3115A2_ReadTemperature()</span>
+		<span class="n">t_MSB</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_T_MSB</span><span class="p">)</span>
+		<span class="n">t_LSB</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_T_LSB</span><span class="p">)</span>
+		<span class="n">templsb</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">t_LSB</span> <span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mf">16.0</span><span class="p">)</span> 			<span class="c">#temp, fraction of a degree</span>
+		<span class="n">temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_MSB</span> <span class="o">+</span> <span class="n">templsb</span><span class="p">)</span>			<span class="c">#</span>
+		<span class="k">return</span> <span class="n">temperature</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.BarometerMode"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.BarometerMode">[docs]</a>	<span class="k">def</span> <span class="nf">BarometerMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the sensor in Barometer mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>		
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_BarometerMode</span><span class="p">()</span>
+		</div>
+<div class="viewcode-block" id="MPL3115A2.AltimeterMode"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.AltimeterMode">[docs]</a>	<span class="k">def</span> <span class="nf">AltimeterMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the mode in Altimeter mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">ctrl_reg</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">)</span>	<span class="c">#Read current settings</span>
+		<span class="n">ctrl_reg</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">SBYB</span><span class="p">)</span>											<span class="c">#Go to Standby mode</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="n">ctrl_reg</span><span class="p">)</span>
+		<span class="n">ctrl_reg</span> <span class="o">=</span> <span class="n">ALT</span><span class="o">|</span><span class="n">OS_128</span>										<span class="c">#Set ALT bit to one and enable back Active mode</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="n">ctrl_reg</span><span class="p">)</span>
+		
+</div>
+<div class="viewcode-block" id="MPL3115A2.ReadAltitude"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ReadAltitude">[docs]</a>	<span class="k">def</span> <span class="nf">ReadAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the number of meters above sea level.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: altitude as a float</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">m_altitude</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_MSB</span><span class="p">)</span>			 <span class="c">#Read altitude data</span>
+		<span class="n">c_altitude</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_CSB</span><span class="p">)</span>
+		<span class="n">l_altitude</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_P_LSB</span><span class="p">)</span>
+		<span class="n">altitude</span> <span class="o">=</span> <span class="p">((</span><span class="n">m_altitude</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">c_altitude</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">l_altitude</span><span class="p">))</span><span class="o">*</span><span class="mi">10</span>
+		<span class="k">return</span><span class="p">(</span> <span class="nb">float</span><span class="p">(</span><span class="n">altitude</span><span class="o">/</span><span class="mi">65536</span><span class="p">))</span>
+		</div>
+<div class="viewcode-block" id="MPL3115A2.GetAltitude"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.GetAltitude">[docs]</a>	<span class="k">def</span> <span class="nf">GetAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the number of meters above sea level.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: altitude as a float</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">alt</span> <span class="o">=</span> <span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ReadAltitude</span><span class="p">()</span>
+		<span class="n">alt_m</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> 
+		<span class="n">alt_l</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">alt_l</span> <span class="o">&gt;</span> <span class="mi">99</span><span class="p">):</span>
+			<span class="n">alt_l</span> <span class="o">=</span> <span class="n">alt_l</span> <span class="o">/</span> <span class="mf">1000.0</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">alt_l</span> <span class="o">=</span> <span class="n">alt_l</span> <span class="o">/</span> <span class="mf">100.0</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">twosToInt</span><span class="p">(</span><span class="n">alt_m</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="n">alt_l</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.StandbyMode"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.StandbyMode">[docs]</a>	<span class="k">def</span> <span class="nf">StandbyMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Puts the sensor in standby mode. This is needed whenever one wants to modify the control registers.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_StandbyMode</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.ActiveMode"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ActiveMode">[docs]</a>	<span class="k">def</span> <span class="nf">ActiveMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Put the sensor in active mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_ActiveMode</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.OversampleRate"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.OversampleRate">[docs]</a>	<span class="k">def</span> <span class="nf">OversampleRate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sampleRate</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the ovsersampling rate.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param sampleRate: sampleRate is from 0 to 7</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_OversampleRate</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.SetAcquisitionTimeStep"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.SetAcquisitionTimeStep">[docs]</a>	<span class="k">def</span> <span class="nf">SetAcquisitionTimeStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ST_Value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the acquisition time step.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param ST_Value:  Time Step value</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_SetAcquisitionTimeStep</span><span class="p">(</span><span class="n">ST_Value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.EnableEventFlags"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.EnableEventFlags">[docs]</a>	<span class="k">def</span> <span class="nf">EnableEventFlags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enables the pressure and temp measurement event flags so that we can</span>
+<span class="sd">		   test against them. This is recommended in datasheet during setup.</span>
+<span class="sd">		   </span>
+<span class="sd">		   </span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_enableEventFlags</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.ToggleOneShot"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ToggleOneShot">[docs]</a>	<span class="k">def</span> <span class="nf">ToggleOneShot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Clears then sets the OST bit which causes the sensor to immediately take another reading</span>
+<span class="sd">		   Needed to sample faster than 1Hz.</span>
+<span class="sd">		   </span>
+<span class="sd">		   </span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_toggleOneShot</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.CofigureInterruptPin"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.CofigureInterruptPin">[docs]</a>	<span class="k">def</span> <span class="nf">CofigureInterruptPin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">interrupt</span><span class="p">,</span><span class="n">pin</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the interrupt pin.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param interrupt: Type of interrupt</span>
+<span class="sd">		:param pin: Only pin 1 is used</span>
+<span class="sd">		:returns: none </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_CofigureInterruptPin</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.WriteByte"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.WriteByte">[docs]</a>	<span class="k">def</span>  <span class="nf">WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write byte value from register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address</span>
+<span class="sd">		:param data: Register value</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">I2C_WriteByteRegister</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MPL3115A2.ReadByte"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ReadByte">[docs]</a>	<span class="k">def</span>  <span class="nf">ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read byte value from register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address</span>
+<span class="sd">		:returns: byte read from register </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">I2C_ReadByteRegister</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.ReadByteArray"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.ReadByteArray">[docs]</a>	<span class="k">def</span> <span class="nf">ReadByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Read a byte array from the sensor.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address</span>
+<span class="sd">		:param buffer: Data buffer</span>
+<span class="sd">		:param length: Data length</span>
+<span class="sd">		:returns: array - Byte array </span>
+<span class="sd">		&quot;&quot;&quot;</span>		
+		<span class="n">MPL</span><span class="o">.</span><span class="n">I2C_ReadByteArray</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="nb">buffer</span><span class="p">,</span><span class="n">length</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MPL3115A2.WriteByteArray"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.WriteByteArray">[docs]</a>	<span class="k">def</span> <span class="nf">WriteByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Writes an array of bytes to the sensor.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address</span>
+<span class="sd">		:param buffer: Data buffer</span>
+<span class="sd">		:param length: buffer length</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">MPL</span><span class="o">.</span><span class="n">MPL3115A2_WriteByteArray</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="nb">buffer</span><span class="p">,</span><span class="n">length</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="MPL3115A2.TwosToInt"><a class="viewcode-back" href="../mpl3115a2.html#MPL3115A2.MPL3115A2.TwosToInt">[docs]</a>	<span class="k">def</span> <span class="nf">TwosToInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">len</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Convert twos complement to integer.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param val: </span>
+<span class="sd">		:param len:</span>
+<span class="sd">		:returns: complement - integer value of two&#39;s complement </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nb">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="nb">len</span><span class="p">)</span>
+			</div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

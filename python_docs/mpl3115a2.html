@@ -1,0 +1,487 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Altimeter/ Barometer/ Temperature sensor &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="1.8 inch display" href="tftlcd.html" />
+    <link rel="prev" title="1Kbit EEPROM" href="eeprom.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tftlcd.html" title="1.8 inch display"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="eeprom.html" title="1Kbit EEPROM"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-MPL3115A2">
+<span id="altimeter-barometer-temperature-sensor"></span><h1>Altimeter/ Barometer/ Temperature sensor<a class="headerlink" href="#module-MPL3115A2" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="MPL3115A2.MPL3115A2">
+<em class="property">class </em><tt class="descclassname">MPL3115A2.</tt><tt class="descname">MPL3115A2</tt><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ActiveMode">
+<tt class="descname">ActiveMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ActiveMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ActiveMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the sensor in active mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.AltimeterMode">
+<tt class="descname">AltimeterMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.AltimeterMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.AltimeterMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the mode in Altimeter mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.BarometerMode">
+<tt class="descname">BarometerMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.BarometerMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.BarometerMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sensor in Barometer mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.CofigureInterruptPin">
+<tt class="descname">CofigureInterruptPin</tt><big>(</big><em>interrupt</em>, <em>pin</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.CofigureInterruptPin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.CofigureInterruptPin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the interrupt pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>interrupt</strong> &#8211; Type of interrupt</li>
+<li><strong>pin</strong> &#8211; Only pin 1 is used</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.EnableEventFlags">
+<tt class="descname">EnableEventFlags</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.EnableEventFlags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.EnableEventFlags" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Enables the pressure and temp measurement event flags so that we can</dt>
+<dd>test against them. This is recommended in datasheet during setup.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.GetAltitude">
+<tt class="descname">GetAltitude</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.GetAltitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.GetAltitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of meters above sea level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">altitude as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.GetID">
+<tt class="descname">GetID</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.GetID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.GetID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Factory Sensor ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">id - Factory ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.GetMode">
+<tt class="descname">GetMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.GetMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.GetMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a bool value indicating wheather the sensor is in Active or Standby mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mode - 1 if in Active mode, 0 otherwise</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.OversampleRate">
+<tt class="descname">OversampleRate</tt><big>(</big><em>sampleRate</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.OversampleRate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.OversampleRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the ovsersampling rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sampleRate</strong> &#8211; sampleRate is from 0 to 7</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ReadAltitude">
+<tt class="descname">ReadAltitude</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ReadAltitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ReadAltitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of meters above sea level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">altitude as a float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ReadBarometricPressure">
+<tt class="descname">ReadBarometricPressure</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ReadBarometricPressure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ReadBarometricPressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current pressure in Pa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">current pressure or -1 if no new data is available</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ReadByte">
+<tt class="descname">ReadByte</tt><big>(</big><em>address</em>, <em>reg</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ReadByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ReadByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read byte value from register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">byte read from register</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ReadByteArray">
+<tt class="descname">ReadByteArray</tt><big>(</big><em>address</em>, <em>reg</em>, <em>buffer</em>, <em>length</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ReadByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ReadByteArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a byte array from the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+<li><strong>buffer</strong> &#8211; Data buffer</li>
+<li><strong>length</strong> &#8211; Data length</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">array - Byte array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ReadTemperature">
+<tt class="descname">ReadTemperature</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ReadTemperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ReadTemperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current temperature in degrees Celcius.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">temp - Returns temperature as a float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.SetAcquisitionTimeStep">
+<tt class="descname">SetAcquisitionTimeStep</tt><big>(</big><em>ST_Value</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.SetAcquisitionTimeStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.SetAcquisitionTimeStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the acquisition time step.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ST_Value</strong> &#8211; Time Step value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.StandbyMode">
+<tt class="descname">StandbyMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.StandbyMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.StandbyMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts the sensor in standby mode. This is needed whenever one wants to modify the control registers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.ToggleOneShot">
+<tt class="descname">ToggleOneShot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.ToggleOneShot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.ToggleOneShot" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Clears then sets the OST bit which causes the sensor to immediately take another reading</dt>
+<dd>Needed to sample faster than 1Hz.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.TwosToInt">
+<tt class="descname">TwosToInt</tt><big>(</big><em>val</em>, <em>len</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.TwosToInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.TwosToInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert twos complement to integer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>val</strong> &#8211; </li>
+<li><strong>len</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">complement - integer value of two&#8217;s complement</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.WriteByte">
+<tt class="descname">WriteByte</tt><big>(</big><em>address</em>, <em>reg</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.WriteByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.WriteByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write byte value from register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+<li><strong>data</strong> &#8211; Register value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="MPL3115A2.MPL3115A2.WriteByteArray">
+<tt class="descname">WriteByteArray</tt><big>(</big><em>address</em>, <em>reg</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/MPL3115A2.html#MPL3115A2.WriteByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MPL3115A2.MPL3115A2.WriteByteArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes an array of bytes to the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+<li><strong>buffer</strong> &#8211; Data buffer</li>
+<li><strong>length</strong> &#8211; buffer length</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="eeprom.html"
+                        title="previous chapter">1Kbit EEPROM</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tftlcd.html"
+                        title="next chapter">1.8 inch display</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mpl3115a2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tftlcd.html" title="1.8 inch display"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="eeprom.html" title="1Kbit EEPROM"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

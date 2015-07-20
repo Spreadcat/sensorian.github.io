@@ -1,0 +1,9 @@
+Ambient Light Sensor
+====================
+
+.. automodule:: APDS9300
+	:members:
+	:undoc-members:
+	:exclude-members: bus
+	:inherited-members:
+	:show-inheritance:

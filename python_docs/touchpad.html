@@ -1,0 +1,399 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Capacitive touch controller (3 buttons) &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="prev" title="1.8 inch display" href="tftlcd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tftlcd.html" title="1.8 inch display"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-CAP1203">
+<span id="capacitive-touch-controller-3-buttons"></span><h1>Capacitive touch controller (3 buttons)<a class="headerlink" href="#module-CAP1203" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="CAP1203.CAP1203">
+<em class="property">class </em><tt class="descclassname">CAP1203.</tt><tt class="descname">CAP1203</tt><a class="reference internal" href="_modules/CAP1203.html#CAP1203"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Capacitive touch controller. Class for CAP1203 touch sensor.</p>
+<dl class="attribute">
+<dt id="CAP1203.CAP1203.MAIN_CTRL_REG">
+<tt class="descname">MAIN_CTRL_REG</tt><em class="property"> = 0</em><a class="headerlink" href="#CAP1203.CAP1203.MAIN_CTRL_REG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="CAP1203.CAP1203.SENSOR_INPUTS">
+<tt class="descname">SENSOR_INPUTS</tt><em class="property"> = 3</em><a class="headerlink" href="#CAP1203.CAP1203.SENSOR_INPUTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.activeMode">
+<tt class="descname">activeMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.activeMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.activeMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the capacitive controller in active mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.checkSensorStatus">
+<tt class="descname">checkSensorStatus</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.checkSensorStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.checkSensorStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the current sensor status.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">status - Current chip status</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.clearInterrupt">
+<tt class="descname">clearInterrupt</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.clearInterrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.clearInterrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear any active interrupts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.configureMultiTouch">
+<tt class="descname">configureMultiTouch</tt><big>(</big><em>number</em>, <em>mulchan</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.configureMultiTouch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.configureMultiTouch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the capacitve touch for multitouch inputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>number</strong> &#8211; number of simultaneous touches 2 or 3</li>
+<li><strong>chan</strong> &#8211; One of the three channels.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.deepSleep">
+<tt class="descname">deepSleep</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.deepSleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.deepSleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the capacitive controller in deep sleep mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.enableInterrupt">
+<tt class="descname">enableInterrupt</tt><big>(</big><em>pin</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.enableInterrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.enableInterrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the interrupt mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pin</strong> &#8211; Enables interrupt on the specific pin</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.getStatusReg">
+<tt class="descname">getStatusReg</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.getStatusReg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.getStatusReg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the status register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">status - Contents of status register</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.multitouchEvent">
+<tt class="descname">multitouchEvent</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.multitouchEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.multitouchEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a multi-touch event happened.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">true if a multi-touch event happened</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.read">
+<tt class="descname">read</tt><big>(</big><em>address</em>, <em>reg</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the contents of the register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address to read from.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">data - Data content of register address</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.readID">
+<tt class="descname">readID</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.readID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.readID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the sensor manufacturer ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">id - Sensor ID as a number</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.readPressedButton">
+<tt class="descname">readPressedButton</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.readPressedButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.readPressedButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the pressed button, one of buttons 1 to 3.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">key - Button pressed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.resumeFromDeepSleep">
+<tt class="descname">resumeFromDeepSleep</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.resumeFromDeepSleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.resumeFromDeepSleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the capacitive controller out of deep sleep mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.setPowerButton">
+<tt class="descname">setPowerButton</tt><big>(</big><em>button</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.setPowerButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.setPowerButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the button for power button mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>button</strong> &#8211; One of the three buttons</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.setSensitivity">
+<tt class="descname">setSensitivity</tt><big>(</big><em>sensitivity</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.setSensitivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.setSensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the sensitivity of the controller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sensitivity</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.standbyMode">
+<tt class="descname">standbyMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.standbyMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.standbyMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the capacitive controller in standby mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CAP1203.CAP1203.write">
+<tt class="descname">write</tt><big>(</big><em>address</em>, <em>reg</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/CAP1203.html#CAP1203.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CAP1203.CAP1203.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a byte to the register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address to write to.</li>
+<li><strong>data</strong> &#8211; Data to be written on byte sized register.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tftlcd.html"
+                        title="previous chapter">1.8 inch display</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/touchpad.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tftlcd.html" title="1.8 inch display"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

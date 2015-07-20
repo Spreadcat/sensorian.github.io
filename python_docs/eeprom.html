@@ -1,0 +1,306 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1Kbit EEPROM &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="Altimeter/ Barometer/ Temperature sensor" href="mpl3115a2.html" />
+    <link rel="prev" title="Real Time Clock And Calendar with battery backup" href="mcp79410.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mpl3115a2.html" title="Altimeter/ Barometer/ Temperature sensor"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mcp79410.html" title="Real Time Clock And Calendar with battery backup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-EEPROM">
+<span id="kbit-eeprom"></span><h1>1Kbit EEPROM<a class="headerlink" href="#module-EEPROM" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="EEPROM.EEPROM">
+<em class="property">class </em><tt class="descclassname">EEPROM.</tt><tt class="descname">EEPROM</tt><a class="reference internal" href="_modules/EEPROM.html#EEPROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Class object of the MCP79410 EEPROM chip.</p>
+<dl class="attribute">
+<dt id="EEPROM.EEPROM.EEPROM_END">
+<tt class="descname">EEPROM_END</tt><em class="property"> = 127</em><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.EEPROM.EEPROM_PROTECTED_END">
+<tt class="descname">EEPROM_PROTECTED_END</tt><em class="property"> = 247</em><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_PROTECTED_END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.EEPROM.EEPROM_PROTECTED_START">
+<tt class="descname">EEPROM_PROTECTED_START</tt><em class="property"> = 240</em><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_PROTECTED_START" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_Read">
+<tt class="descname">EEPROM_Read</tt><big>(</big><em>mem_address</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_Read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_Read" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function reads a data byte from the EEPROM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; Address of register.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">reg - Register content.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_ReadPage">
+<tt class="descname">EEPROM_ReadPage</tt><big>(</big><em>mem_address</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_ReadPage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_ReadPage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads a single page from the RTCC EEPROM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; EEPROM address to write to</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">buffer - Page buffer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.EEPROM.EEPROM_SREG">
+<tt class="descname">EEPROM_SREG</tt><em class="property"> = 255</em><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_SREG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.EEPROM.EEPROM_START">
+<tt class="descname">EEPROM_START</tt><em class="property"> = 0</em><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_START" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_SetBlockProtection">
+<tt class="descname">EEPROM_SetBlockProtection</tt><big>(</big><em>protSetting</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_SetBlockProtection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_SetBlockProtection" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function sets the EEPROM Block protection settings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; EEPROM address to write to.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">reg - Page buffer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_Write">
+<tt class="descname">EEPROM_Write</tt><big>(</big><em>mem_address</em>, <em>ee_data</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_Write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_Write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a single byte in the I2C EEPROM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; Memory register to write to.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ee_data - Byte data to write.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_WritePage">
+<tt class="descname">EEPROM_WritePage</tt><big>(</big><em>mem_address</em>, <em>buffer</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_WritePage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_WritePage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function writes a single page to the RTCC EEPROM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; EEPROM address to write to</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">buffer - Page buffer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.EEPROM_WriteProtected">
+<tt class="descname">EEPROM_WriteProtected</tt><big>(</big><em>mem_address</em>, <em>ee_data</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.EEPROM_WriteProtected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.EEPROM_WriteProtected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes to the special protected EEPROM space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mem_address</strong> &#8211; Memory register to write to.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ee_data - Byte data to write.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.readRegister">
+<tt class="descname">readRegister</tt><big>(</big><em>rtcc_reg</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.readRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.readRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the value of the register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rtcc_reg</strong> &#8211; Address of the register.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Register byte content</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="EEPROM.EEPROM.writeRegister">
+<tt class="descname">writeRegister</tt><big>(</big><em>rtcc_reg</em>, <em>dat</em><big>)</big><a class="reference internal" href="_modules/EEPROM.html#EEPROM.writeRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.EEPROM.writeRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a new value on the register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rtcc_reg</strong> &#8211; Address of the register.</li>
+<li><strong>dat</strong> &#8211; Byte value to be written on the register.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="EEPROM.PROTECTION_t">
+<em class="property">class </em><tt class="descclassname">EEPROM.</tt><tt class="descname">PROTECTION_t</tt><a class="reference internal" href="_modules/EEPROM.html#PROTECTION_t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EEPROM.PROTECTION_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class type for EEPROM protection settings.</p>
+<dl class="attribute">
+<dt id="EEPROM.PROTECTION_t.ALL">
+<tt class="descname">ALL</tt><em class="property"> = 3</em><a class="headerlink" href="#EEPROM.PROTECTION_t.ALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.PROTECTION_t.HALF">
+<tt class="descname">HALF</tt><em class="property"> = 2</em><a class="headerlink" href="#EEPROM.PROTECTION_t.HALF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="EEPROM.PROTECTION_t.QUARTER">
+<tt class="descname">QUARTER</tt><em class="property"> = 1</em><a class="headerlink" href="#EEPROM.PROTECTION_t.QUARTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mcp79410.html"
+                        title="previous chapter">Real Time Clock And Calendar with battery backup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mpl3115a2.html"
+                        title="next chapter">Altimeter/ Barometer/ Temperature sensor</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/eeprom.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mpl3115a2.html" title="Altimeter/ Barometer/ Temperature sensor"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mcp79410.html" title="Real Time Clock And Calendar with battery backup"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

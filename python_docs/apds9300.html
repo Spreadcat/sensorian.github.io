@@ -1,0 +1,382 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ambient Light Sensor &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="Orange LED" href="led.html" />
+    <link rel="prev" title="Serial Port for Serial Logging" href="serial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="led.html" title="Orange LED"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="serial.html" title="Serial Port for Serial Logging"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-APDS9300">
+<span id="ambient-light-sensor"></span><h1>Ambient Light Sensor<a class="headerlink" href="#module-APDS9300" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="APDS9300.APDS9300">
+<em class="property">class </em><tt class="descclassname">APDS9300.</tt><tt class="descname">APDS9300</tt><a class="reference internal" href="_modules/APDS9300.html#APDS9300"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Ambient Light Sensor. Class functions for the APDS9300 ambient light sensor.</p>
+<dl class="method">
+<dt id="APDS9300.APDS9300.chipID">
+<tt class="descname">chipID</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.chipID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.chipID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the unique chip ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">partID ID of chip</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.clearInterrupt">
+<tt class="descname">clearInterrupt</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.clearInterrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.clearInterrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear any active interrupts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.getLuxLevel">
+<tt class="descname">getLuxLevel</tt><big>(</big><em>ch0</em>, <em>ch1</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.getLuxLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.getLuxLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns LUX output from the raw sensor data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ch0</strong> &#8211; Channel 0 value</li>
+<li><strong>ch1</strong> &#8211; Channel 1 value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Lux Float value of light intensity</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.readByte">
+<tt class="descname">readByte</tt><big>(</big><em>reg</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.readByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.readByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a byte value from a register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reg</strong> &#8211; Register  address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Register byte content</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.readChannel">
+<tt class="descname">readChannel</tt><big>(</big><em>channel</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.readChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.readChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read raw data from channel 0 or channel 1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>channel</strong> &#8211; Value of 0 or 1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data - Channel data as raw number.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.readWord">
+<tt class="descname">readWord</tt><big>(</big><em>reg</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.readWord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.readWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a word value from a register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reg</strong> &#8211; Register  address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Register word content</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setGain">
+<tt class="descname">setGain</tt><big>(</big><em>gain</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setGain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setGain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the gain of the internal photodiode sensors, can be 1x or 16x.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gain</strong> &#8211; Gain type can be GAIN_1 or GAIN_16 for gain of 1 or 16x</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setIntHighThreshold">
+<tt class="descname">setIntHighThreshold</tt><big>(</big><em>highvalue</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setIntHighThreshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setIntHighThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the high level data threshold for the interrupt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>highvalue</strong> &#8211; High interrupt threshold value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setIntLowThreshold">
+<tt class="descname">setIntLowThreshold</tt><big>(</big><em>lowvalue</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setIntLowThreshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setIntLowThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the low level data threshold for the interrupt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lowvalue</strong> &#8211; Low interrupt threshold value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setInterruptState">
+<tt class="descname">setInterruptState</tt><big>(</big><em>enable=False</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setInterruptState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setInterruptState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable the interrupts on the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enable</strong> &#8211; Enables or diable interrupt. Default is False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setSamplingTime">
+<tt class="descname">setSamplingTime</tt><big>(</big><em>sampling_time</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setSamplingTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setSamplingTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the sampling time of the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sampling_time</strong> &#8211; Can be 0x00,0x01,0x02</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.setpowerState">
+<tt class="descname">setpowerState</tt><big>(</big><em>state</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.setpowerState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.setpowerState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the power state of the chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> &#8211; Denotes the power state of the sensor ,set to 0/1 to turn off/on.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.writeByte">
+<tt class="descname">writeByte</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.writeByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.writeByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a byte value. Assumes the register pointer is predefined.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; Data byte to write on the I2C bus</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.writeRegister">
+<tt class="descname">writeRegister</tt><big>(</big><em>reg</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.writeRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.writeRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a byte value to a register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>reg</strong> &#8211; Register  address</li>
+<li><strong>data</strong> &#8211; Data byte to be written on register.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="APDS9300.APDS9300.writeWord">
+<tt class="descname">writeWord</tt><big>(</big><em>reg</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/APDS9300.html#APDS9300.writeWord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#APDS9300.APDS9300.writeWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a word value to a register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>reg</strong> &#8211; Register  address</li>
+<li><strong>data</strong> &#8211; Data word to be written on the register.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="serial.html"
+                        title="previous chapter">Serial Port for Serial Logging</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="led.html"
+                        title="next chapter">Orange LED</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/apds9300.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="led.html" title="Orange LED"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="serial.html" title="Serial Port for Serial Logging"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

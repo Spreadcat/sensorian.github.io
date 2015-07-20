@@ -1,0 +1,28 @@
+Serial Port for Serial Logging
+==============================
+
+The USB-Serial port on the Sensorian can be used for debugging and
+logging. It can be accessed in Python using the :mod:`serial` module.
+The Sensorian USB-Serial port is :file:`/dev/ttyAMA0`.
+The following code example illustrates this. ::
+
+	import serial
+
+	def main():
+		ser = serial.Serial('/dev/ttyAMA0',9600)
+		ser.write('Read data from terminal')
+
+		while True:
+			c = ser.read()
+			print(c)
+
+	if __name__ == '__main__':
+		try:
+			main()
+		except KeyboardInterrupt:
+			print("")
+			
+	__author__      = "Dhimiter Qendri"
+	__copyright__   = "Copyright Sensorian 2015"
+
+::

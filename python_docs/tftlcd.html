@@ -1,0 +1,579 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.8 inch display &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="Capacitive touch controller (3 buttons)" href="touchpad.html" />
+    <link rel="prev" title="Altimeter/ Barometer/ Temperature sensor" href="mpl3115a2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="touchpad.html" title="Capacitive touch controller (3 buttons)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mpl3115a2.html" title="Altimeter/ Barometer/ Temperature sensor"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-TFT">
+<span id="inch-display"></span><h1>1.8 inch display<a class="headerlink" href="#module-TFT" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="TFT.TFT">
+<em class="property">class </em><tt class="descclassname">TFT.</tt><tt class="descname">TFT</tt><a class="reference internal" href="_modules/TFT.html#TFT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>FW Driver for an ST7735S TFT controller.</p>
+<dl class="method">
+<dt id="TFT.TFT.CE_DESELECT">
+<tt class="descname">CE_DESELECT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.CE_DESELECT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.CE_DESELECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deselect TFT CS pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.CE_OUTPUT">
+<tt class="descname">CE_OUTPUT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.CE_OUTPUT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.CE_OUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set TFT CS pin as output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.CE_SELECT">
+<tt class="descname">CE_SELECT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.CE_SELECT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.CE_SELECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select TFT CS pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.clear">
+<tt class="descname">clear</tt><big>(</big><em>color=(0</em>, <em>0</em>, <em>0)</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the image buffer to the specified RGB color (default black).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>color</strong> &#8211; Background color.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.command">
+<tt class="descname">command</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a byte or array of bytes to the display as command data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; Single byte command.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.data">
+<tt class="descname">data</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a byte or array of bytes to the display as display data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; Data byte</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.display">
+<tt class="descname">display</tt><big>(</big><em>image=None</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the provided image to the hardware. If no image parameter is provided the display buffer will be written to the hardware.  
+If an image is provided, it should be RGB format and the same dimensions as the display hardware.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> &#8211; picture image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PIL ImageDraw instance for 2D drawing on the image buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.fullDisplay">
+<tt class="descname">fullDisplay</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.fullDisplay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.fullDisplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the  display in full screen mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.idleMode">
+<tt class="descname">idleMode</tt><big>(</big><em>onoff</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.idleMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.idleMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts the display or takes it out of idle mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>onoff</strong> &#8211; idle mode status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.initialize">
+<tt class="descname">initialize</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intializes the display controller and prepares the it for any subsequent operations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.invert">
+<tt class="descname">invert</tt><big>(</big><em>status</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables color inversion on the display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> &#8211; Color inversion status.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the display, (RST) reset pin must be connected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.scrollArea">
+<tt class="descname">scrollArea</tt><big>(</big><em>tfa</em>, <em>vsa</em>, <em>bfa</em>, <em>firstline</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.scrollArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.scrollArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the  scroll area.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tfa</strong> &#8211; top fixed area row</li>
+<li><strong>vsa</strong> &#8211; vertical scrolling area</li>
+<li><strong>bfa</strong> &#8211; bottom fixed area row</li>
+<li><strong>firstline</strong> &#8211; Beginning of  first line</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.send">
+<tt class="descname">send</tt><big>(</big><em>data</em>, <em>dataOrCmd=True</em>, <em>length=4096</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a byte or array of bytes to the display. 
+dataOrCmd parameter controls if byte should be interpreted as display data (True)/ command data otherwise.  
+Length is an optional size of bytes to write in a single SPI transaction, with a default of 4096.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Single byte or an array of bytes.</li>
+<li><strong>dataOrCmd</strong> &#8211; Flag for command or data mode</li>
+<li><strong>length</strong> &#8211; size of array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.setAddrWindow">
+<tt class="descname">setAddrWindow</tt><big>(</big><em>x0=0</em>, <em>y0=0</em>, <em>x1=None</em>, <em>y1=None</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.setAddrWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.setAddrWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the pixel address window for proceeding drawing commands.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x0</strong> &#8211; x0 and x1 should define the minimum and maximum x pixel bounds.</li>
+<li><strong>y0</strong> &#8211; </li>
+<li><strong>x1</strong> &#8211; y0 and y1 should define the minimum and maximum y pixel bound.</li>
+<li><strong>y1</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.setColorMode">
+<tt class="descname">setColorMode</tt><big>(</big><em>slef</em>, <em>mode</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.setColorMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.setColorMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the  pixel color depth. This can be 12,16 or 18 bit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> &#8211; Constant number</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.setGamma">
+<tt class="descname">setGamma</tt><big>(</big><em>gamma</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.setGamma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.setGamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the  gamma mode of the display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gamma</strong> &#8211; Is from 1 to 4.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.setPartialArea">
+<tt class="descname">setPartialArea</tt><big>(</big><em>start</em>, <em>end</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.setPartialArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.setPartialArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the  partial scroll area. This function is used in conjuction with the scrollArea function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> &#8211; start of patial area</li>
+<li><strong>end</strong> &#8211; end of patial area</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.setRotation">
+<tt class="descname">setRotation</tt><big>(</big><em>mode</em><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.setRotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.setRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the display text orientation. Mirrored modes are 
+also supported on top of portrait and landscape modes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> &#8211; orientation data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.sleep">
+<tt class="descname">sleep</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.sleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PIL ImageDraw instance for 2D drawing on the image buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.turnOff">
+<tt class="descname">turnOff</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.turnOff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.turnOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blanks out the display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.turnOn">
+<tt class="descname">turnOn</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.turnOn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.turnOn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function turn on the display from idle mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TFT.TFT.wakeUp">
+<tt class="descname">wakeUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/TFT.html#TFT.wakeUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.TFT.wakeUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wakes the display from sleep mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="TFT.color565">
+<tt class="descclassname">TFT.</tt><tt class="descname">color565</tt><big>(</big><em>r</em>, <em>g</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/TFT.html#color565"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.color565" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert red, green, blue components to a 16-bit 565 RGB value. 
+Components should be values 0 to 255.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> &#8211; Red byte.</li>
+<li><strong>g</strong> &#8211; Green byte.</li>
+<li><strong>b</strong> &#8211; Blue byte.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">pixel - 16-bit 565 RGB value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="TFT.image_to_data">
+<tt class="descclassname">TFT.</tt><tt class="descname">image_to_data</tt><big>(</big><em>image</em><big>)</big><a class="reference internal" href="_modules/TFT.html#image_to_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TFT.image_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator function to convert a PIL image to 16-bit 565 RGB bytes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> &#8211; PIL image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">imgArray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mpl3115a2.html"
+                        title="previous chapter">Altimeter/ Barometer/ Temperature sensor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="touchpad.html"
+                        title="next chapter">Capacitive touch controller (3 buttons)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tftlcd.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="touchpad.html" title="Capacitive touch controller (3 buttons)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mpl3115a2.html" title="Altimeter/ Barometer/ Temperature sensor"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

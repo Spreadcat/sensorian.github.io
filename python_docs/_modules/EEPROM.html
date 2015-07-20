@@ -1,0 +1,232 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>EEPROM &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for EEPROM</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;D.Qendri&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2015 Sensorian&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;GPL V3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">smbus</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">bus</span> <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">EEPROMaddress</span> <span class="o">=</span> <span class="mh">0x57</span>	  <span class="c"># EEPROM address</span>
+
+<span class="n">EEPROM_WRITE</span>  <span class="o">=</span> <span class="mh">0xae</span>      <span class="c">#  DEVICE ADDR for EEPROM (writes)   </span>
+<span class="n">EEPROM_READ</span>  <span class="o">=</span> <span class="mh">0xaf</span>       <span class="c">#  DEVICE ADDR for EEPROM (reads)  </span>
+<span class="n">RTCC_WRITE</span>   <span class="o">=</span> <span class="mh">0xde</span>       <span class="c">#  DEVICE ADDR for RTCC MCHP  (writes) </span>
+<span class="n">RTCC_READ</span>    <span class="o">=</span> <span class="mh">0xdf</span>       <span class="c">#  DEVICE ADDR for RTCC MCHP  (reads)</span>
+<span class="n">SRAM_PTR</span>     <span class="o">=</span> <span class="mh">0x20</span>       <span class="c">#  pointer of the SRAM area (RTCC) </span>
+<span class="n">EEPROM_SREG</span>  <span class="o">=</span> <span class="mh">0xff</span>       <span class="c">#  STATUS REGISTER in the  EEPROM</span>
+
+<span class="n">BP0</span>    <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">BP1</span>    <span class="o">=</span>  <span class="mh">0x08</span>
+
+<div class="viewcode-block" id="PROTECTION_t"><a class="viewcode-back" href="../eeprom.html#EEPROM.PROTECTION_t">[docs]</a><span class="k">class</span> <span class="nc">PROTECTION_t</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Class type for EEPROM protection settings.&quot;&quot;&quot;</span>
+	<span class="n">QUARTER</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="n">HALF</span> <span class="o">=</span> <span class="mi">2</span>
+	<span class="n">ALL</span> <span class="o">=</span> <span class="mi">3</span>
+</div>
+<div class="viewcode-block" id="EEPROM"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM">[docs]</a><span class="k">class</span> <span class="nc">EEPROM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;Class object of the MCP79410 EEPROM chip.&quot;&quot;&quot;</span>
+	
+	<span class="n">EEPROM_START</span> <span class="o">=</span> <span class="mh">0x00</span>
+	<span class="n">EEPROM_END</span>   <span class="o">=</span> <span class="mh">0x7F</span>
+	<span class="n">EEPROM_PROTECTED_START</span> 	<span class="o">=</span> <span class="mh">0xF0</span>
+	<span class="n">EEPROM_PROTECTED_END</span>    <span class="o">=</span> <span class="mh">0xF7</span>
+
+	<span class="n">EEPROM_SREG</span>  <span class="o">=</span> <span class="mh">0xff</span>       <span class="c">#  STATUS REGISTER in the  EEPROM</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializes the EEPROM object.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">EEPROMaddress</span>		
+		
+<div class="viewcode-block" id="EEPROM.EEPROM_Write"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_Write">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_Write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mem_address</span><span class="p">,</span><span class="n">ee_data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write a single byte in the I2C EEPROM.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address:  Memory register to write to.</span>
+<span class="sd">		:returns: ee_data - Byte data to write.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">mem_address</span><span class="p">,</span><span class="n">ee_data</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="EEPROM.EEPROM_WriteProtected"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_WriteProtected">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_WriteProtected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mem_address</span><span class="p">,</span><span class="n">ee_data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Writes to the special protected EEPROM space.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address:  Memory register to write to.</span>
+<span class="sd">		:returns: ee_data - Byte data to write.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">mem_address</span><span class="p">,</span><span class="n">ee_data</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="EEPROM.EEPROM_Read"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_Read">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_Read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mem_address</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The function reads a data byte from the EEPROM.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address: Address of register.</span>
+<span class="sd">		:returns: reg - Register content.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">mem_address</span><span class="p">)</span>
+			</div>
+<div class="viewcode-block" id="EEPROM.EEPROM_SetBlockProtection"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_SetBlockProtection">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_SetBlockProtection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">protSetting</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This function sets the EEPROM Block protection settings.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address: EEPROM address to write to.</span>
+<span class="sd">		:returns: reg - Page buffer.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">EEPROM_SREG</span><span class="p">,</span><span class="n">protSetting</span><span class="p">)</span> 
+		</div>
+<div class="viewcode-block" id="EEPROM.EEPROM_ReadPage"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_ReadPage">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_ReadPage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mem_address</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This function reads a single page from the RTCC EEPROM.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address: EEPROM address to write to</span>
+<span class="sd">		:returns: buffer - Page buffer</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">buffer</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">read_i2c_block_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">mem_address</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">buffer</span>
+		</div>
+<div class="viewcode-block" id="EEPROM.EEPROM_WritePage"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.EEPROM_WritePage">[docs]</a>	<span class="k">def</span> <span class="nf">EEPROM_WritePage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mem_address</span><span class="p">,</span><span class="nb">buffer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This function writes a single page to the RTCC EEPROM.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param mem_address: EEPROM address to write to</span>
+<span class="sd">		:returns: buffer - Page buffer</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bus</span><span class="o">.</span><span class="n">write_i2c_block_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">mem_address</span><span class="p">,</span><span class="nb">buffer</span><span class="p">)</span>							<span class="c">#Enable clock</span>
+</div>
+<div class="viewcode-block" id="EEPROM.writeRegister"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.writeRegister">[docs]</a>	<span class="k">def</span> <span class="nf">writeRegister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rtcc_reg</span><span class="p">,</span><span class="n">dat</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write a new value on the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param rtcc_reg: Address of the register.</span>
+<span class="sd">		:param dat:  Byte value to be written on the register.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bus</span><span class="o">.</span><span class="n">write_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">rtcc_reg</span><span class="p">,</span> <span class="n">dat</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="EEPROM.readRegister"><a class="viewcode-back" href="../eeprom.html#EEPROM.EEPROM.readRegister">[docs]</a>	<span class="k">def</span> <span class="nf">readRegister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rtcc_reg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the value of the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param rtcc_reg: Address of the register.</span>
+<span class="sd">		:returns: Register byte content </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">read_byte_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">rtcc_reg</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+		<span class="k">return</span> <span class="n">result</span>
+		</div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

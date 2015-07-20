@@ -1,0 +1,8 @@
+Altimeter/ Barometer/ Temperature sensor
+========================================
+
+.. automodule:: MPL3115A2
+	:members:
+	:undoc-members:
+	:inherited-members:
+	:show-inheritance:

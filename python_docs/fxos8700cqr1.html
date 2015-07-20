@@ -1,0 +1,506 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="NOR Flash Memory 2Mbit" href="s25fl204k.html" />
+    <link rel="prev" title="Orange LED" href="led.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="s25fl204k.html" title="NOR Flash Memory 2Mbit"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="led.html" title="Orange LED"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-FXOS8700CQR1">
+<span id="accelerometer-magnetometer-with-advanced-motion-detection-capabilities-and-tap-gesture-detection"></span><h1>Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection<a class="headerlink" href="#module-FXOS8700CQR1" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="FXOS8700CQR1.FXOS8700CQR1">
+<em class="property">class </em><tt class="descclassname">FXOS8700CQR1.</tt><tt class="descname">FXOS8700CQR1</tt><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Representation of an FXOS8700CQ accelerometer/ magnetometer object.</p>
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.FIFOMode">
+<tt class="descname">FIFOMode</tt><big>(</big><em>mode</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.FIFOMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.FIFOMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the sensor in FIFO mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.activeMode">
+<tt class="descname">activeMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.activeMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.activeMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the chip in Active mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.configureAccelerometer">
+<tt class="descname">configureAccelerometer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.configureAccelerometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.configureAccelerometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the Accelerometer with default settings +/- 2g.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.configureMagnetometer">
+<tt class="descname">configureMagnetometer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.configureMagnetometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.configureMagnetometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the magnetometer with default settigs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.configureOrientation">
+<tt class="descname">configureOrientation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.configureOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.configureOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure Orientation mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.fullScaleRange">
+<tt class="descname">fullScaleRange</tt><big>(</big><em>range</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.fullScaleRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.fullScaleRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure full scale range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getChipMode">
+<tt class="descname">getChipMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getChipMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getChipMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current mode of the chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getHeading">
+<tt class="descname">getHeading</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getHeading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getHeading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get magnetometer heading .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">magnetometer heading</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getID">
+<tt class="descname">getID</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the chip ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">chip id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getODR">
+<tt class="descname">getODR</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getODR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getODR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the output data rate .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getOrientation">
+<tt class="descname">getOrientation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns current orientation of the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">current orientation of the Sensorian</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.getTemperature">
+<tt class="descname">getTemperature</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.getTemperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.getTemperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the sensor temperature.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.highPassFilter">
+<tt class="descname">highPassFilter</tt><big>(</big><em>status</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.highPassFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.highPassFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the highpass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.hybridMode">
+<tt class="descname">hybridMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.hybridMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.hybridMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the chip in hybrid mode with default settigs 50 Hz ouput data rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.magnetometerStatus">
+<tt class="descname">magnetometerStatus</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.magnetometerStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.magnetometerStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the accelerometer status.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.pollAccelerometer">
+<tt class="descname">pollAccelerometer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.pollAccelerometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.pollAccelerometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get accelerometer data , these are left justified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">acceleration data (ax, ay, az)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.pollMagnetometer">
+<tt class="descname">pollMagnetometer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.pollMagnetometer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.pollMagnetometer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the magnetometer data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">magnetometer data (mx, my, mz)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.readByte">
+<tt class="descname">readByte</tt><big>(</big><em>address</em>, <em>reg</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.readByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.readByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a data byte from the given register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.readStatusReg">
+<tt class="descname">readStatusReg</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.readStatusReg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.readStatusReg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read contents of status register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.setAccelerometerDynamicRange">
+<tt class="descname">setAccelerometerDynamicRange</tt><big>(</big><em>range</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.setAccelerometerDynamicRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.setAccelerometerDynamicRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the sensor accelerometer dynamic range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>range</strong> &#8211; Accelerometer dynamic range</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.setODR">
+<tt class="descname">setODR</tt><big>(</big><em>DataRateValue</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.setODR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.setODR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the output data rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>DataRateValue</strong> &#8211; Output data rate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.standbyMode">
+<tt class="descname">standbyMode</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.standbyMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.standbyMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the chip in Standby mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="FXOS8700CQR1.FXOS8700CQR1.writeByte">
+<tt class="descname">writeByte</tt><big>(</big><em>address</em>, <em>reg</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/FXOS8700CQR1.html#FXOS8700CQR1.writeByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FXOS8700CQR1.FXOS8700CQR1.writeByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a data byte on the given register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Sensor address</li>
+<li><strong>reg</strong> &#8211; Register address</li>
+<li><strong>value</strong> &#8211; Register value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="led.html"
+                        title="previous chapter">Orange LED</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="s25fl204k.html"
+                        title="next chapter">NOR Flash Memory 2Mbit</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/fxos8700cqr1.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="s25fl204k.html" title="NOR Flash Memory 2Mbit"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="led.html" title="Orange LED"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

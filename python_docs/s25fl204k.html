@@ -1,0 +1,447 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>NOR Flash Memory 2Mbit &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="index.html" />
+    <link rel="next" title="Real Time Clock And Calendar with battery backup" href="mcp79410.html" />
+    <link rel="prev" title="Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection" href="fxos8700cqr1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mcp79410.html" title="Real Time Clock And Calendar with battery backup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fxos8700cqr1.html" title="Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-S25FL204K">
+<span id="nor-flash-memory-2mbit"></span><h1>NOR Flash Memory 2Mbit<a class="headerlink" href="#module-S25FL204K" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="S25FL204K.S25FL204K">
+<em class="property">class </em><tt class="descclassname">S25FL204K.</tt><tt class="descname">S25FL204K</tt><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Class object for 4Mbit NOR flash memory chip</p>
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.CE_DESELECT">
+<tt class="descname">CE_DESELECT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.CE_DESELECT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.CE_DESELECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deselect flash memory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.CE_OUTPUT">
+<tt class="descname">CE_OUTPUT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.CE_OUTPUT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.CE_OUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure Chip Enable pin as output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.CE_SELECT">
+<tt class="descname">CE_SELECT</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.CE_SELECT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.CE_SELECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select flash memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.blockErase">
+<tt class="descname">blockErase</tt><big>(</big><em>address</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.blockErase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.blockErase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase a block from the flash memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> &#8211; Block initial address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.chipErase">
+<tt class="descname">chipErase</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.chipErase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.chipErase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flash memory chip class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the SPI interface for the flash memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.deepSleep">
+<tt class="descname">deepSleep</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.deepSleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.deepSleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put the memory in deep sleep mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.isWriteBusy">
+<tt class="descname">isWriteBusy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.isWriteBusy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.isWriteBusy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a write is in process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.jedec_ID_Read">
+<tt class="descname">jedec_ID_Read</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.jedec_ID_Read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.jedec_ID_Read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flash memory chip class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.readArray">
+<tt class="descname">readArray</tt><big>(</big><em>address</em>, <em>arrayLength</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.readArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.readArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flash memory chip class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Starting address of array</li>
+<li><strong>arrayLength</strong> &#8211; Array length in bytes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.readByte">
+<tt class="descname">readByte</tt><big>(</big><em>address</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.readByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.readByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read one byte from the given memory address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> &#8211; Address of data in memory.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.readID">
+<tt class="descname">readID</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.readID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.readID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flash memory chip class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.readStatusRegister">
+<tt class="descname">readStatusRegister</tt><big>(</big><em>statReg</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.readStatusRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.readStatusRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the contents of the status register.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>statReg</strong> &#8211; Address of one of the status registers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">stat - Status register contents</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.sectorErase">
+<tt class="descname">sectorErase</tt><big>(</big><em>address</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.sectorErase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.sectorErase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase a sector from the flash memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> &#8211; Sector address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.setBlockProtection">
+<tt class="descname">setBlockProtection</tt><big>(</big><em>prot</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.setBlockProtection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.setBlockProtection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the contents of a specific block as protected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prot</strong> &#8211; Specific block</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.wakeUp">
+<tt class="descname">wakeUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.wakeUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.wakeUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wake up from deep sleep mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.writeArray">
+<tt class="descname">writeArray</tt><big>(</big><em>address</em>, <em>pData</em>, <em>arrayLength</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.writeArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.writeArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an array to the memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> &#8211; Address of data in memory.</li>
+<li><strong>pData</strong> &#8211; </li>
+<li><strong>arrayLength</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.writeByte">
+<tt class="descname">writeByte</tt><big>(</big><em>data</em>, <em>address</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.writeByte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.writeByte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write one byte at a specific address in the memory chip.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; </li>
+<li><strong>address</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="S25FL204K.S25FL204K.writeStatusRegister">
+<tt class="descname">writeStatusRegister</tt><big>(</big><em>statReg</em><big>)</big><a class="reference internal" href="_modules/S25FL204K.html#S25FL204K.writeStatusRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#S25FL204K.S25FL204K.writeStatusRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a new value to the contents of the status register</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>statReg</strong> &#8211; Address of one of the status registers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fxos8700cqr1.html"
+                        title="previous chapter">Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mcp79410.html"
+                        title="next chapter">Real Time Clock And Calendar with battery backup</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/s25fl204k.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mcp79410.html" title="Real Time Clock And Calendar with battery backup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fxos8700cqr1.html" title="Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection"
+             >previous</a> |</li>
+        <li><a href="index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

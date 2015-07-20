@@ -1,0 +1,8 @@
+1Kbit EEPROM
+============
+
+.. automodule:: EEPROM
+	:members:
+	:undoc-members:
+	:inherited-members:
+	:show-inheritance:

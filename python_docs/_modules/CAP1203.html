@@ -1,0 +1,303 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CAP1203 &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for CAP1203</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;D.Qendri&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2015 Sensorian&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;GPL V3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">smbus</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">CAP1203ADDR</span>  <span class="o">=</span> <span class="mh">0x28</span>					<span class="c">#Capacitive sensor address</span>
+<span class="n">CAP</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">&quot;./libCAP.so&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CAP1203"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203">[docs]</a><span class="k">class</span> <span class="nc">CAP1203</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;Capacitive touch controller. Class for CAP1203 touch sensor.&#39;&#39;&#39;</span>
+	<span class="n">MAIN_CTRL_REG</span> <span class="o">=</span> <span class="mh">0x00</span>
+	<span class="n">SENSOR_INPUTS</span> <span class="o">=</span> <span class="mh">0x03</span>
+
+	
+	<span class="k">def</span>  <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure sensor for capacitive touch.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">CAP1203ADDR</span>	
+		<span class="n">CAP</span><span class="o">.</span><span class="n">I2C_Initialize</span><span class="p">()</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Initialize</span><span class="p">()</span>
+
+		
+<div class="viewcode-block" id="CAP1203.activeMode"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.activeMode">[docs]</a>	<span class="k">def</span>  <span class="nf">activeMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the capacitive controller in active mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_ActiveMode</span><span class="p">()</span>
+
+		</div>
+<div class="viewcode-block" id="CAP1203.standbyMode"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.standbyMode">[docs]</a>	<span class="k">def</span>  <span class="nf">standbyMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the capacitive controller in standby mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_StandbyMode</span><span class="p">()</span>
+		</div>
+<div class="viewcode-block" id="CAP1203.deepSleep"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.deepSleep">[docs]</a>	<span class="k">def</span>  <span class="nf">deepSleep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Put the capacitive controller in deep sleep mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_DeepSleep</span><span class="p">()</span>		
+</div>
+<div class="viewcode-block" id="CAP1203.resumeFromDeepSleep"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.resumeFromDeepSleep">[docs]</a>	<span class="k">def</span> <span class="nf">resumeFromDeepSleep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Take the capacitive controller out of deep sleep mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP1203_ResumeFromDeepSleep</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="CAP1203.configureMultiTouch"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.configureMultiTouch">[docs]</a>	<span class="k">def</span>  <span class="nf">configureMultiTouch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">number</span><span class="p">,</span><span class="n">mulchan</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the capacitve touch for multitouch inputs.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param number: number of simultaneous touches 2 or 3</span>
+<span class="sd">		:param chan: One of the three channels.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">MULTITOUCH</span><span class="p">,</span><span class="n">number</span><span class="o">|</span><span class="n">MULTBLK_EN</span><span class="p">)</span>      							  <span class="c">#Set number of simultaneous touches</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">MULTIPATCONF</span><span class="p">,</span><span class="n">MTP_EN</span><span class="o">|</span><span class="n">MTP_TH1</span><span class="o">|</span><span class="n">MTP_TH0</span><span class="o">|</span><span class="n">COMP_PTRN</span><span class="o">|</span><span class="n">MTP_ALERT</span><span class="p">)</span>      <span class="c">#Enable multitouch</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">MULTIPATTERN</span><span class="p">,</span><span class="n">mulchan</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="CAP1203.multitouchEvent"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.multitouchEvent">[docs]</a>	<span class="k">def</span> <span class="nf">multitouchEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return true if a multi-touch event happened.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: true if a multi-touch event happened </span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_MultitouchEvent</span><span class="p">()</span>
+		
+</div>
+<div class="viewcode-block" id="CAP1203.setPowerButton"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.setPowerButton">[docs]</a>	<span class="k">def</span> <span class="nf">setPowerButton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">button</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the button for power button mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param button: One of the three buttons</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_SetPowerButton</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+
+		</div>
+<div class="viewcode-block" id="CAP1203.readPressedButton"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.readPressedButton">[docs]</a>	<span class="k">def</span>	 <span class="nf">readPressedButton</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the pressed button, one of buttons 1 to 3.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: key - Button pressed</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_ReadPressedButton</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="CAP1203.getStatusReg"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.getStatusReg">[docs]</a>	<span class="k">def</span> <span class="nf">getStatusReg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Read the status register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: status - Contents of status register</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">status</span> <span class="o">=</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Read</span><span class="p">(</span><span class="n">GEN_STATUS</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">status</span><span class="p">;</span>
+</div>
+<div class="viewcode-block" id="CAP1203.enableInterrupt"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.enableInterrupt">[docs]</a>	<span class="k">def</span>  <span class="nf">enableInterrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pin</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enable the interrupt mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param pin: Enables interrupt on the specific pin</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_EnableInterrupt</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+
+		</div>
+<div class="viewcode-block" id="CAP1203.setSensitivity"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.setSensitivity">[docs]</a>	<span class="k">def</span>  <span class="nf">setSensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sensitivity</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the sensitivity of the controller.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param sensitivity: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_SetSensitivity</span><span class="p">(</span><span class="n">sensitivity</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="CAP1203.checkSensorStatus"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.checkSensorStatus">[docs]</a>	<span class="k">def</span>  <span class="nf">checkSensorStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Check the current sensor status.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: status - Current chip status</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_CheckSensorStatus</span><span class="p">()</span>
+
+		</div>
+<div class="viewcode-block" id="CAP1203.clearInterrupt"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.clearInterrupt">[docs]</a>	<span class="k">def</span>  <span class="nf">clearInterrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Clear any active interrupts.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_ClearInterrupt</span><span class="p">()</span>
+		</div>
+<div class="viewcode-block" id="CAP1203.readID"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.readID">[docs]</a>	<span class="k">def</span>  <span class="nf">readID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the sensor manufacturer ID.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: id - Sensor ID as a number</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">id</span> <span class="o">=</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_ReadID</span><span class="p">()</span>
+		<span class="k">return</span> <span class="nb">id</span>
+</div>
+<div class="viewcode-block" id="CAP1203.write"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.write">[docs]</a>	<span class="k">def</span>  <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write a byte to the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address to write to.</span>
+<span class="sd">		:param data: Data to be written on byte sized register.</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="CAP1203.read"><a class="viewcode-back" href="../touchpad.html#CAP1203.CAP1203.read">[docs]</a>	<span class="k">def</span>  <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the contents of the register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address to read from.</span>
+<span class="sd">		:returns: data - Data content of register address</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">CAP</span><span class="o">.</span><span class="n">CAP1203_Read</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">)</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

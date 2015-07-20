@@ -1,0 +1,8 @@
+Accelerometer / Magnetometer with advanced motion detection capabilities and tap gesture detection
+==================================================================================================
+
+.. automodule:: FXOS8700CQR1
+	:members:
+	:undoc-members:
+	:inherited-members:
+	:show-inheritance:

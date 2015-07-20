@@ -1,0 +1,1070 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FXOS8700CQR1 &mdash; Sensorian Python Library Reference Guide 1.0</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Sensorian Python Library Reference Guide 1.0" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for FXOS8700CQR1</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;D.Qendri&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2015 Sensorian&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;GPL V3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">FXO</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">&quot;./libFXO.so&quot;</span><span class="p">)</span>
+
+<span class="c">#########################################################################################################</span>
+
+<span class="n">FXOS8700CQR1_ADDRESS</span>	<span class="o">=</span><span class="mh">0x1E</span>
+<span class="n">FXOS8700CQ_WHOAMI_VAL</span> 	<span class="o">=</span><span class="mh">0xC7</span>		<span class="c"># FXOS8700CQ WHOAMI production register value</span>
+<span class="n">FXOS8700CQ_READ_LEN</span> 	<span class="o">=</span><span class="mi">12</span>			<span class="c"># 6 channels of two bytes = 12 bytes </span>
+<span class="n">UINT14_MAX</span> 				<span class="o">=</span><span class="mi">16383</span>		<span class="c"># For processing the accelerometer data to right-justified 2&#39;s complement</span>
+
+<span class="c">#######################################Memory Map########################################################</span>
+
+<span class="n">STATUS</span>	<span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">OUT_X_MSB</span>	<span class="o">=</span> <span class="mh">0x01</span>
+<span class="n">OUT_X_LSB</span>	<span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">OUT_Y_MSB</span>	<span class="o">=</span> <span class="mh">0x03</span>
+<span class="n">OUT_Y_LSB</span>	<span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">OUT_Z_MSB</span> 		<span class="o">=</span> <span class="mh">0x05</span>
+<span class="n">OUT_Z_LSB</span> 		<span class="o">=</span> <span class="mh">0x05</span>
+<span class="n">F_SETUP</span> 		<span class="o">=</span> <span class="mh">0x09</span>
+<span class="n">TRIG_CFG</span> 		<span class="o">=</span> <span class="mh">0x0A</span>
+<span class="n">SYSMOD</span> 			<span class="o">=</span> <span class="mh">0x0B</span>
+<span class="n">INT_SOURCE</span> 		<span class="o">=</span> <span class="mh">0x0C</span>
+<span class="n">WHO_AM_I</span> 		<span class="o">=</span> <span class="mh">0x0D</span>
+<span class="n">XYZ_DATA_CFG</span> 	<span class="o">=</span> <span class="mh">0x0E</span>
+<span class="n">HP_FILTER_CUTOFF</span> <span class="o">=</span> <span class="mh">0x0F</span>
+<span class="n">PL_STATUS</span> 		<span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">PL_CFG</span> 			<span class="o">=</span> <span class="mh">0x11</span>
+<span class="n">PL_COUNT</span> 		<span class="o">=</span> <span class="mh">0x12</span>
+<span class="n">PL_BF_ZCOMP</span> 	<span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">PL_THS_REG</span> 		<span class="o">=</span> <span class="mh">0x14</span>
+<span class="n">A_FFMT_CFG</span>		<span class="o">=</span> <span class="mh">0x15</span>
+<span class="n">A_FFMT_SRC</span> 		<span class="o">=</span> <span class="mh">0x16</span>
+<span class="n">A_FFMT_THS</span> 		<span class="o">=</span> <span class="mh">0x17</span>
+<span class="n">A_FFMT_COUNT</span> 	<span class="o">=</span> <span class="mh">0x18</span>
+<span class="n">TRANSIENT_CFG</span> 	<span class="o">=</span> <span class="mh">0x1D</span>
+<span class="n">TRANSIENT_SRC</span> 	<span class="o">=</span> <span class="mh">0x1E</span>
+<span class="n">TRANSIENT_THS</span> 	<span class="o">=</span> <span class="mh">0x1F</span>
+<span class="n">TRANSIENT_COUNT</span> <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">PULSE_CFG</span> 		<span class="o">=</span> <span class="mh">0x21</span>
+<span class="n">PULSE_SRC</span> 		<span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">PULSE_THSX</span> 		<span class="o">=</span> <span class="mh">0x23</span>
+<span class="n">PULSE_THSY</span> 		<span class="o">=</span> <span class="mh">0x24</span>
+<span class="n">PULSE_THSZ</span> 		<span class="o">=</span> <span class="mh">0x25</span>
+<span class="n">PULSE_TMLT</span> 		<span class="o">=</span> <span class="mh">0x26</span>
+<span class="n">PULSE_LTCY</span> 		<span class="o">=</span> <span class="mh">0x27</span>
+<span class="n">PULSE_WIND</span> 		<span class="o">=</span> <span class="mh">0x28</span>
+<span class="n">ASLP_COUNT</span> 		<span class="o">=</span> <span class="mh">0x29</span>
+<span class="n">CTRL_REG1</span> 		<span class="o">=</span> <span class="mh">0x2A</span>
+<span class="n">CTRL_REG2</span> 		<span class="o">=</span> <span class="mh">0x2B</span>
+<span class="n">CTRL_REG3</span> 		<span class="o">=</span> <span class="mh">0x2C</span>
+<span class="n">CTRL_REG4</span> 		<span class="o">=</span> <span class="mh">0x2D</span>
+<span class="n">CTRL_REG5</span> 		<span class="o">=</span> <span class="mh">0x2E</span>
+<span class="n">OFF_X</span> 			<span class="o">=</span> <span class="mh">0x2F</span>
+<span class="n">OFF_Y</span> 			<span class="o">=</span> <span class="mh">0x30</span>
+<span class="n">OFF_Z</span> 			<span class="o">=</span> <span class="mh">0x31</span>
+<span class="n">M_DR_STATUS</span> 	<span class="o">=</span> <span class="mh">0x32</span>
+<span class="n">M_OUT_X_MSB</span> 	<span class="o">=</span> <span class="mh">0x33</span>
+<span class="n">M_OUT_X_LSB</span> 	<span class="o">=</span> <span class="mh">0x34</span>
+<span class="n">M_OUT_Y_MSB</span> 	<span class="o">=</span> <span class="mh">0x35</span>
+<span class="n">M_OUT_Y_LSB</span> 	<span class="o">=</span> <span class="mh">0x36</span>
+<span class="n">M_OUT_Z_MSB</span>	 	<span class="o">=</span> <span class="mh">0x37</span>
+<span class="n">M_OUT_Z_LSB</span> 	<span class="o">=</span> <span class="mh">0x38</span>
+<span class="n">CMP_X_MSB</span> 		<span class="o">=</span> <span class="mh">0x39</span>
+<span class="n">CMP_X_LSB</span> 		<span class="o">=</span> <span class="mh">0x3A</span>
+<span class="n">CMP_Y_MSB</span> 		<span class="o">=</span> <span class="mh">0x3B</span>
+<span class="n">CMP_Y_LSB</span> 		<span class="o">=</span> <span class="mh">0x3C</span>
+<span class="n">CMP_Z_MSB</span> 		<span class="o">=</span> <span class="mh">0x3D</span>
+<span class="n">CMP_Z_LSB</span> 		<span class="o">=</span> <span class="mh">0x3E</span>
+<span class="n">M_OFF_X_MSB</span> 	<span class="o">=</span> <span class="mh">0x3F</span>
+<span class="n">M_OFF_X_LSB</span> 	<span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">M_OFF_Y_MSB</span> 	<span class="o">=</span> <span class="mh">0x41</span>
+<span class="n">M_OFF_Y_LSB</span> 	<span class="o">=</span> <span class="mh">0x42</span>
+<span class="n">M_OFF_Z_MSB</span> 	<span class="o">=</span> <span class="mh">0x43</span>
+<span class="n">M_OFF_Z_LSB</span> 	<span class="o">=</span> <span class="mh">0x44</span>
+<span class="n">MAX_X_MSB</span> 		<span class="o">=</span> <span class="mh">0x45</span>
+<span class="n">MAX_X_LSB</span> 		<span class="o">=</span> <span class="mh">0x46</span>
+<span class="n">MAX_Y_MSB</span> 		<span class="o">=</span> <span class="mh">0x47</span>
+<span class="n">MAX_Y_LSB</span> 		<span class="o">=</span> <span class="mh">0x48</span>
+<span class="n">MAX_Z_MSB</span> 		<span class="o">=</span> <span class="mh">0x49</span>
+<span class="n">MAX_Z_LSB</span> 		<span class="o">=</span> <span class="mh">0x4A</span>
+<span class="n">MIN_X_MSB</span> 		<span class="o">=</span> <span class="mh">0x4B</span>
+<span class="n">MIN_X_LSB</span> 		<span class="o">=</span> <span class="mh">0x4C</span>
+<span class="n">MIN_Y_MSB</span>		<span class="o">=</span> <span class="mh">0x4D</span>
+<span class="n">MIN_Y_LSB</span> 		<span class="o">=</span> <span class="mh">0x4E</span>
+<span class="n">MIN_Z_MSB</span> 		<span class="o">=</span> <span class="mh">0x4F</span>
+<span class="n">MIN_Z_LSB</span> 		<span class="o">=</span> <span class="mh">0x50</span>
+<span class="n">TEMP</span> 			<span class="o">=</span> <span class="mh">0x51</span>
+<span class="n">M_THS_CFG</span> 		<span class="o">=</span> <span class="mh">0x52</span>
+<span class="n">M_THS_SRC</span> 		<span class="o">=</span> <span class="mh">0x53</span>
+<span class="n">M_THS_X_MSB</span> 	<span class="o">=</span> <span class="mh">0x54</span>
+<span class="n">M_THS_X_LSB</span> 	<span class="o">=</span> <span class="mh">0x55</span>
+<span class="n">M_THS_Y_MSB</span> 	<span class="o">=</span> <span class="mh">0x56</span>
+<span class="n">M_THS_Y_LSB</span> 	<span class="o">=</span> <span class="mh">0x57</span>
+<span class="n">M_THS_Z_MSB</span> 	<span class="o">=</span> <span class="mh">0x58</span>
+<span class="n">M_THS_Z_LSB</span>	 	<span class="o">=</span> <span class="mh">0x59</span>
+<span class="n">M_THS_COUNT</span> 	<span class="o">=</span> <span class="mh">0x5A</span>
+<span class="n">M_CTRL_REG1</span> 	<span class="o">=</span> <span class="mh">0x5B</span>
+<span class="n">M_CTRL_REG2</span> 	<span class="o">=</span> <span class="mh">0x5C</span>
+<span class="n">M_CTRL_REG3</span> 	<span class="o">=</span> <span class="mh">0x5D</span>
+<span class="n">M_INT_SRC</span> 		<span class="o">=</span> <span class="mh">0x5E</span>
+<span class="n">A_VECM_CFG</span> 		<span class="o">=</span> <span class="mh">0x5F</span>
+<span class="n">A_VECM_THS_MSB</span> 	<span class="o">=</span> <span class="mh">0x60</span>
+<span class="n">A_VECM_THS_LSB</span> 	<span class="o">=</span> <span class="mh">0x61</span>
+<span class="n">A_VECM_CNT</span> 		<span class="o">=</span> <span class="mh">0x62</span>
+<span class="n">A_VECM_INITX_MSB</span> <span class="o">=</span> <span class="mh">0x63</span>
+<span class="n">A_VECM_INITX_LSB</span> <span class="o">=</span> <span class="mh">0x64</span>
+<span class="n">A_VECM_INITY_MSB</span> <span class="o">=</span> <span class="mh">0x65</span>
+<span class="n">A_VECM_INITY_LSB</span> <span class="o">=</span> <span class="mh">0x66</span>
+<span class="n">A_VECM_INITZ_MSB</span> <span class="o">=</span> <span class="mh">0x67</span>
+<span class="n">A_VECM_INITZ_LSB</span> <span class="o">=</span> <span class="mh">0x68</span>
+<span class="n">M_VECM_CFG</span> 		<span class="o">=</span> <span class="mh">0x69</span>
+<span class="n">M_VECM_THS_MSB</span> 	<span class="o">=</span> <span class="mh">0x6A</span>
+<span class="n">M_VECM_THS_LSB</span> 	<span class="o">=</span> <span class="mh">0x6B</span>
+<span class="n">M_VECM_CNT</span> 		<span class="o">=</span> <span class="mh">0x6C</span>
+<span class="n">M_VECM_INITX_MSB</span> <span class="o">=</span> <span class="mh">0x6D</span>
+<span class="n">M_VECM_INITX_LSB</span> <span class="o">=</span> <span class="mh">0x6E</span>
+<span class="n">M_VECM_INITY_MSB</span> <span class="o">=</span> <span class="mh">0x6F</span>
+<span class="n">M_VECM_INITY_LSB</span> <span class="o">=</span> <span class="mh">0x70</span>
+<span class="n">M_VECM_INITZ_MSB</span> <span class="o">=</span> <span class="mh">0x71</span>
+<span class="n">M_VECM_INITZ_LSB</span> <span class="o">=</span> <span class="mh">0x72</span>
+<span class="n">A_FFMT_THS_X_MSB</span> <span class="o">=</span> <span class="mh">0x73</span>
+<span class="n">A_FFMT_THS_X_LSB</span> <span class="o">=</span> <span class="mh">0x74</span>
+<span class="n">A_FFMT_THS_Y_MSB</span> <span class="o">=</span> <span class="mh">0x75</span>
+<span class="n">A_FFMT_THS_Y_LSB</span> <span class="o">=</span> <span class="mh">0x76</span>
+<span class="n">A_FFMT_THS_Z_MSB</span> <span class="o">=</span> <span class="mh">0x77</span>
+<span class="n">A_FFMT_THS_Z_LSB</span> <span class="o">=</span> <span class="mh">0x78</span>
+
+<span class="c">######################################################################################################################</span>
+<span class="n">FXOS8700CQ_ADDRESS</span>  <span class="o">=</span> <span class="mh">0x1E</span>
+
+
+<span class="c">#############*STATUS Register################/</span>
+
+<span class="n">ZYXOW_MASK</span>     	<span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">ZOW_MASK</span>       	<span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">YOW_MASK</span>        <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">XOW_MASK</span>        <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">ZYXDR_MASK</span>      <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">ZDR_MASK</span>        <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">YDR_MASK</span>        <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">XDR_MASK</span>        <span class="o">=</span>   <span class="mh">0x01</span>
+
+<span class="c">##############STATUS Register#################</span>
+<span class="n">F_OVF_MASK</span>          <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">F_WMRK_FLAG_MASK</span>    <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">F_CNT5_MASK</span>         <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">F_CNT4_MASK</span>         <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">F_CNT3_MASK</span>         <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">F_CNT2_MASK</span>         <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">F_CNT1_MASK</span>         <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">F_CNT0_MASK</span>         <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">F_CNT_MASK</span>          <span class="o">=</span>   <span class="mh">0x3F</span>
+
+<span class="c">##############STATUS Register################/</span>
+<span class="n">OUT_X_MSB_REG</span>    <span class="o">=</span>    <span class="mh">0x01</span>
+<span class="n">OUT_X_LSB_REG</span>    <span class="o">=</span>    <span class="mh">0x02</span>
+<span class="n">OUT_Y_MSB_REG</span>    <span class="o">=</span>    <span class="mh">0x03</span>
+<span class="n">OUT_Y_LSB_REG</span>    <span class="o">=</span>    <span class="mh">0x04</span>
+<span class="n">OUT_Z_MSB_REG</span>    <span class="o">=</span>    <span class="mh">0x05</span>
+<span class="n">OUT_Z_LSB_REG</span>    <span class="o">=</span>    <span class="mh">0x06</span>
+
+<span class="c">#############*FIFO Register################/</span>
+<span class="n">F_MODE1_MASK</span>     <span class="o">=</span>    <span class="mh">0x80</span>
+<span class="n">F_MODE0_MASK</span>     <span class="o">=</span>    <span class="mh">0x40</span>
+<span class="n">F_WMRK5_MASK</span>     <span class="o">=</span>    <span class="mh">0x20</span>
+<span class="n">F_WMRK4_MASK</span>     <span class="o">=</span>    <span class="mh">0x10</span>
+<span class="n">F_WMRK3_MASK</span>     <span class="o">=</span>    <span class="mh">0x08</span>
+<span class="n">F_WMRK2_MASK</span>     <span class="o">=</span>    <span class="mh">0x04</span>
+<span class="n">F_WMRK1_MASK</span>     <span class="o">=</span>    <span class="mh">0x02</span>
+<span class="n">F_WMRK0_MASK</span>     <span class="o">=</span>    <span class="mh">0x01</span>
+<span class="n">F_MODE_MASK</span>      <span class="o">=</span>    <span class="mh">0xC0</span>
+<span class="n">F_WMRK_MASK</span>      <span class="o">=</span>    <span class="mh">0x3F</span>
+
+<span class="n">F_MODE_DISABLED</span>    <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">F_MODE_CIRCULAR</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">F_MODE0_MASK</span><span class="p">)</span>
+<span class="n">F_MODE_FILL</span>        <span class="o">=</span>  <span class="p">(</span><span class="n">F_MODE1_MASK</span><span class="p">)</span>
+<span class="n">F_MODE_TRIGGER</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">F_MODE1_MASK</span><span class="o">+</span><span class="n">F_MODE0_MASK</span><span class="p">)</span>
+
+<span class="c">#############*TRIG_CFG Register################/</span>
+<span class="n">TRIG_TRANS_MASK</span>    <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">TRIG_LNDPRT_MASK</span>   <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">TRIG_PULSE_MASK</span>    <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">TRIG_FF_MT_MASK</span>    <span class="o">=</span>   <span class="mh">0x04</span>
+
+<span class="c">#############*SYSMOD Register################/</span>
+<span class="n">FGERR_MASK</span>       <span class="o">=</span>    <span class="mh">0x80</span>    
+<span class="n">FGT_4_MASK</span>       <span class="o">=</span>    <span class="mh">0x40</span>    
+<span class="n">FGT_3_MASK</span>       <span class="o">=</span>    <span class="mh">0x20</span>    
+<span class="n">FGT_2_MASK</span>       <span class="o">=</span>    <span class="mh">0x10</span>    
+<span class="n">FGT_1_MASK</span>       <span class="o">=</span>    <span class="mh">0x08</span>    
+<span class="n">FGT_0_MASK</span>       <span class="o">=</span>    <span class="mh">0x04</span>    
+<span class="n">FGT_MASK</span>         <span class="o">=</span>    <span class="mh">0x7C</span>    
+<span class="n">SYSMOD1_MASK</span>     <span class="o">=</span>    <span class="mh">0x02</span>
+<span class="n">SYSMOD0_MASK</span>     <span class="o">=</span>    <span class="mh">0x01</span>
+<span class="n">SYSMOD_MASK</span>      <span class="o">=</span>    <span class="mh">0x03</span>
+
+<span class="n">SYSMOD_STANDBY</span>    <span class="o">=</span>   <span class="mh">0x00</span>
+<span class="n">SYSMOD_WAKE</span>       <span class="o">=</span>   <span class="p">(</span><span class="n">SYSMOD0_MASK</span><span class="p">)</span>
+<span class="n">SYSMOD_SLEEP</span>      <span class="o">=</span>   <span class="p">(</span><span class="n">SYSMOD1_MASK</span><span class="p">)</span>
+
+<span class="c">#############*INT_SOURCE Register################/</span>
+<span class="n">SRC_ASLP_MASK</span>      <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">SRC_FIFO_MASK</span>      <span class="o">=</span>  <span class="mh">0x40</span>    
+<span class="n">SRC_TRANS_MASK</span>     <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">SRC_LNDPRT_MASK</span>    <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">SRC_PULSE_MASK</span>     <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">SRC_FF_MT_MASK</span>     <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">SRC_DRDY_MASK</span>      <span class="o">=</span>  <span class="mh">0x01</span>
+
+<span class="c">############WHO_AM_I Device ID Register##############/</span>
+<span class="n">FXOS8700CQ</span>       <span class="o">=</span>    <span class="mh">0xC7</span>
+<span class="n">MXOS8700CQ</span>       <span class="o">=</span>    <span class="mh">0xC4</span>
+
+<span class="c">########*XYZ_DATA_CFG Sensor Data Configuration Register########</span>
+<span class="n">HPF_OUT_MASK</span>      <span class="o">=</span>   <span class="mh">0x10</span>    <span class="c"># MMA8451 and MMA8452 only</span>
+<span class="n">FS1_MASK</span>          <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">FS0_MASK</span>          <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">FS_MASK</span>            <span class="o">=</span>  <span class="mh">0x03</span>
+
+<span class="n">FULL_SCALE_2G</span>     <span class="o">=</span>    <span class="mh">0x00</span>
+<span class="n">FULL_SCALE_4G</span>     <span class="o">=</span>    <span class="p">(</span><span class="n">FS0_MASK</span><span class="p">)</span>
+<span class="n">FULL_SCALE_8G</span>     <span class="o">=</span>    <span class="p">(</span><span class="n">FS1_MASK</span><span class="p">)</span>
+
+
+<span class="c">######*HP_FILTER_CUTOFF High Pass Filter Register ###########/</span>
+<span class="n">PULSE_HPF_BYP_MASK</span>   <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">PULSE_LPF_EN_MASK</span>    <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">SEL1_MASK</span>           <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">SEL0_MASK</span>           <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">SEL_MASK</span>            <span class="o">=</span>   <span class="mh">0x03</span>
+
+<span class="c">#######PL_STATUS Portrait/Landscape Status Register ##########</span>
+<span class="n">NEWLP_MASK</span>         <span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">LO_MASK</span>           <span class="o">=</span>    <span class="mh">0x40</span>
+<span class="n">LAPO1_MASK</span>         <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">LAPO0_MASK</span>         <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">BAFRO_MASK</span>         <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">LAPO_MASK</span>           <span class="o">=</span>  <span class="mh">0x06</span>
+
+
+<span class="c">#######* PL_CFG Portrait/Landscape Configuration Register########</span>
+<span class="n">DBCNTM_MASK</span>         <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">PL_EN_MASK</span>          <span class="o">=</span>  <span class="mh">0x40</span>
+
+<span class="c">###PL_BF_ZCOMP Back/Front and Z Compensation Register############</span>
+
+<span class="n">BKFR1_MASK</span>         <span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">BKFR0_MASK</span>         <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">ZLOCK2_MASK</span>        <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">ZLOCK1_MASK</span>        <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">ZLOCK0_MASK</span>        <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">BKFR_MASK</span>          <span class="o">=</span>   <span class="mh">0xC0</span>
+<span class="n">ZLOCK_MASK</span>         <span class="o">=</span>   <span class="mh">0x07</span>
+
+<span class="c">######*PL_P_L_THS Portrait to Landscape Threshold Register########</span>
+<span class="n">PL_P_L_THS_REG</span>      <span class="o">=</span>  <span class="mh">0x14</span>
+<span class="n">P_L_THS4_MASK</span>       <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">P_L_THS3_MASK</span>       <span class="o">=</span>  <span class="mh">0x40</span>
+<span class="n">P_L_THS2_MASK</span>       <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">P_L_THS1_MASK</span>       <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">P_L_THS0_MASK</span>       <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">HYS2_MASK</span>           <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">HYS1_MASK</span>           <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">HYS0_MASK</span>           <span class="o">=</span>  <span class="mh">0x01</span>
+<span class="n">P_L_THS_MASK</span>        <span class="o">=</span>  <span class="mh">0xF8</span>
+<span class="n">HYS_MASK</span>            <span class="o">=</span>  <span class="mh">0x07</span>
+
+<span class="c">##########*FF_MT_CFG Freefall and Motion Configuration Register###/</span>
+<span class="n">FF_MT_CFG_REG</span>       <span class="o">=</span>  <span class="mh">0x15</span>
+<span class="n">ELE_MASK</span>            <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">OAE_MASK</span>            <span class="o">=</span>  <span class="mh">0x40</span>
+<span class="n">ZEFE_MASK</span>           <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">YEFE_MASK</span>           <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">XEFE_MASK</span>           <span class="o">=</span>  <span class="mh">0x08</span>
+
+<span class="c">#####*FF_MT_SRC Freefall and Motion Source Registers###########/</span>
+<span class="n">FF_MT_SRC_REG</span>       <span class="o">=</span>  <span class="mh">0x16</span>
+<span class="n">EA_MASK</span>            <span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">ZHE_MASK</span>           <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">ZHP_MASK</span>           <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">YHE_MASK</span>           <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">YHP_MASK</span>           <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">XHE_MASK</span>           <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">XHP_MASK</span>           <span class="o">=</span>   <span class="mh">0x01</span>
+
+<span class="c">###FF_MT_THS Freefall and Motion Threshold Registers###########</span>
+<span class="n">FT_MT_THS_REG</span>        <span class="o">=</span> <span class="mh">0x17</span>
+<span class="n">TRANSIENT_THS_REG</span>    <span class="o">=</span> <span class="mh">0x1F</span>
+<span class="n">DBCNTM_MASK</span>          <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">THS6_MASK</span>            <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">THS5_MASK</span>            <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">THS4_MASK</span>            <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">THS3_MASK</span>            <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">THS2_MASK</span>            <span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">TXS1_MASK</span>            <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">THS0_MASK</span>            <span class="o">=</span> <span class="mh">0x01</span>
+<span class="n">THS_MASK</span>             <span class="o">=</span> <span class="mh">0x7F</span>
+
+
+<span class="c">####*FF_MT_COUNT Freefall Motion Count Registers############/</span>
+<span class="n">FF_MT_COUNT_REG</span>     <span class="o">=</span>  <span class="mh">0x18</span>
+
+<span class="c">########*TRANSIENT_CFG Transient Configuration Register########/</span>
+
+<span class="n">TELE_MASK</span>       <span class="o">=</span>	   <span class="mh">0x10</span>
+<span class="n">ZTEFE_MASK</span>      <span class="o">=</span>      <span class="mh">0x08</span>
+<span class="n">YTEFE_MASK</span>      <span class="o">=</span>      <span class="mh">0x04</span>
+<span class="n">XTEFE_MASK</span>      <span class="o">=</span>      <span class="mh">0x02</span>
+<span class="n">HPF_BYP_MASK</span>    <span class="o">=</span>      <span class="mh">0x01</span>
+
+
+<span class="c">######TRANSIENT_SRC Transient Source Register##############/</span>
+
+<span class="n">TEA_MASK</span>           <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">ZTRANSE_MASK</span>       <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">Z_TRANS_POL_MASK</span>   <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">YTRANSE_MASK</span>       <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">Y_TRANS_POL_MASK</span>   <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">XTRANSE_MASK</span>       <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">X_TRANS_POL_MASK</span>   <span class="o">=</span>   <span class="mh">0x01</span>
+
+
+<span class="c">#############*PULSE_CFG Register##############/</span>
+
+<span class="n">DPA_MASK</span>           <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">PELE_MASK</span>          <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">ZDPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">ZSPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">YDPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">YSPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">XDPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">XSPEFE_MASK</span>        <span class="o">=</span>   <span class="mh">0x01</span>
+
+
+<span class="c">#############*PULSE_SRC Register################/</span>
+
+<span class="n">PEA_MASK</span>           <span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">AXZ_MASK</span>           <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">AXY_MASK</span>           <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">AXX_MASK</span>           <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">DPE_MASK</span>           <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">POLZ_MASK</span>          <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">POLY_MASK</span>          <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">POLX_MASK</span>          <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">PTHS_MASK</span>          <span class="o">=</span>   <span class="mh">0x7F</span>
+
+<span class="c">########CTRL_REG1 System Control 1 Register##############/</span>
+<span class="n">ASLP_RATE1_MASK</span>    <span class="o">=</span>   <span class="mh">0x80</span>
+<span class="n">ASLP_RATE0_MASK</span>    <span class="o">=</span>   <span class="mh">0x40</span>
+<span class="n">DR2_MASK</span>           <span class="o">=</span>   <span class="mh">0x20</span>
+<span class="n">DR1_MASK</span>           <span class="o">=</span>   <span class="mh">0x10</span>
+<span class="n">DR0_MASK</span>           <span class="o">=</span>   <span class="mh">0x08</span>
+<span class="n">LNOISE_MASK</span>        <span class="o">=</span>   <span class="mh">0x04</span>
+<span class="n">FREAD_MASK</span>         <span class="o">=</span>   <span class="mh">0x02</span>
+<span class="n">ACTIVE_MASK</span>        <span class="o">=</span>   <span class="mh">0x01</span>
+<span class="n">ASLP_RATE_MASK</span>     <span class="o">=</span>   <span class="mh">0xC0</span>
+<span class="n">DR_MASK</span>            <span class="o">=</span>   <span class="mh">0x38</span>
+
+<span class="n">ASLP_RATE_20MS</span>      <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">ASLP_RATE_80MS</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE0_MASK</span><span class="p">)</span>
+<span class="n">ASLP_RATE_160MS</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE1_MASK</span><span class="p">)</span>
+<span class="n">ASLP_RATE_640MS</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE1_MASK</span><span class="o">+</span><span class="n">ASLP_RATE0_MASK</span><span class="p">)</span>
+
+<span class="n">ASLP_RATE_50HZ</span>       <span class="o">=</span> <span class="p">(</span><span class="n">ASLP_RATE_20MS</span><span class="p">)</span>
+<span class="n">ASLP_RATE_12_5HZ</span>     <span class="o">=</span> <span class="p">(</span><span class="n">ASLP_RATE_80MS</span><span class="p">)</span>
+<span class="n">ASLP_RATE_6_25HZ</span>     <span class="o">=</span> <span class="p">(</span><span class="n">ASLP_RATE_160MS</span><span class="p">)</span>
+<span class="n">ASLP_RATE_1_56HZ</span>     <span class="o">=</span> <span class="p">(</span><span class="n">ASLP_RATE_640MS</span><span class="p">)</span>
+
+<span class="n">HYB_ASLP_RATE_25HZ</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE_20MS</span><span class="p">)</span>
+<span class="n">HYB_ASLP_RATE_6_25HZ</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE_80MS</span><span class="p">)</span>
+<span class="n">HYB_ASLP_RATE_1_56HZ</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">ASLP_RATE_160MS</span><span class="p">)</span>
+<span class="n">HYB_ASLP_RATE_0_8HZ</span>     <span class="o">=</span> <span class="p">(</span><span class="n">ASLP_RATE_640MS</span><span class="p">)</span>
+
+<span class="n">DATA_RATE_1250US</span>    <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">DATA_RATE_2500US</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">DR0_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_5MS</span>       <span class="o">=</span>  <span class="p">(</span><span class="n">DR1_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_10MS</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">DR1_MASK</span><span class="o">+</span><span class="n">DR0_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_20MS</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">DR2_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_80MS</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">DR2_MASK</span><span class="o">+</span><span class="n">DR0_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_160MS</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DR2_MASK</span><span class="o">+</span><span class="n">DR1_MASK</span><span class="p">)</span>
+<span class="n">DATA_RATE_640MS</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DR2_MASK</span><span class="o">+</span><span class="n">DR1_MASK</span><span class="o">+</span><span class="n">DR0_MASK</span><span class="p">)</span>
+
+<span class="n">DATA_RATE_800HZ</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_1250US</span><span class="p">)</span>
+<span class="n">DATA_RATE_400HZ</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_2500US</span><span class="p">)</span>
+<span class="n">DATA_RATE_200HZ</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_5MS</span><span class="p">)</span>
+<span class="n">DATA_RATE_100HZ</span>     <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_10MS</span><span class="p">)</span>
+<span class="n">DATA_RATE_50HZ</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_20MS</span><span class="p">)</span>
+<span class="n">DATA_RATE_12_5HZ</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_80MS</span><span class="p">)</span>
+<span class="n">DATA_RATE_6_25HZ</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_160MS</span><span class="p">)</span>
+<span class="n">DATA_RATE_1_56HZ</span>    <span class="o">=</span>  <span class="p">(</span><span class="n">DATA_RATE_640MS</span><span class="p">)</span>
+
+<span class="n">HYB_DATA_RATE_400HZ</span>   <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_1250US</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_200HZ</span>   <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_2500US</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_100HZ</span>   <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_5MS</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_50HZ</span>    <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_10MS</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_25HZ</span>    <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_20MS</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_6_25HZ</span>  <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_80MS</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_3_15HZ</span>  <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_160MS</span><span class="p">)</span>
+<span class="n">HYB_DATA_RATE_0_8HZ</span>   <span class="o">=</span><span class="p">(</span><span class="n">DATA_RATE_640MS</span><span class="p">)</span>
+
+<span class="n">ACTIVE</span>              <span class="o">=</span>  <span class="p">(</span><span class="n">ACTIVE_MASK</span><span class="p">)</span>
+<span class="n">STANDBY</span>             <span class="o">=</span>  <span class="mh">0x00</span>
+
+
+<span class="c">########CTRL_REG2 System Control 2 Register##############/</span>
+<span class="n">CTRL_REG2</span>        	<span class="o">=</span>  <span class="mh">0x2B</span>
+<span class="n">ST_MASK</span>             <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">RST_MASK</span>            <span class="o">=</span>  <span class="mh">0x40</span>
+<span class="n">SMODS1_MASK</span>         <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">SMODS0_MASK</span>         <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">SLPE_MASK</span>           <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">MODS1_MASK</span>          <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">MODS0_MASK</span>          <span class="o">=</span>  <span class="mh">0x01</span>
+<span class="n">SMODS_MASK</span>          <span class="o">=</span>  <span class="mh">0x18</span>
+<span class="n">MODS_MASK</span>           <span class="o">=</span>  <span class="mh">0x03</span>
+
+<span class="n">SMOD_NORMAL</span>         <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">SMOD_LOW_NOISE</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">SMODS0_MASK</span><span class="p">)</span>
+<span class="n">SMOD_HIGH_RES</span>       <span class="o">=</span>  <span class="p">(</span><span class="n">SMODS1_MASK</span><span class="p">)</span>
+<span class="n">SMOD_LOW_POWER</span>      <span class="o">=</span>  <span class="p">(</span><span class="n">SMODS1_MASK</span><span class="o">+</span><span class="n">SMODS0_MASK</span><span class="p">)</span>
+
+<span class="n">MOD_NORMAL</span>          <span class="o">=</span>  <span class="mh">0x00</span>
+<span class="n">MOD_LOW_NOISE</span>       <span class="o">=</span>  <span class="p">(</span><span class="n">MODS0_MASK</span><span class="p">)</span>
+<span class="n">MOD_HIGH_RES</span>        <span class="o">=</span>  <span class="p">(</span><span class="n">MODS1_MASK</span><span class="p">)</span>
+<span class="n">MOD_LOW_POWER</span>       <span class="o">=</span>  <span class="p">(</span><span class="n">MODS1_MASK</span><span class="o">+</span><span class="n">MODS0_MASK</span><span class="p">)</span>
+
+
+<span class="c">########CTRL_REG3 System Control 3 Register##############/</span>
+<span class="n">FIFO_GATE_MASK</span>       <span class="o">=</span> <span class="mh">0x80</span>    
+<span class="n">WAKE_TRANS_MASK</span>      <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">WAKE_LNDPRT_MASK</span>     <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">WAKE_PULSE_MASK</span>      <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">WAKE_FF_MT_MASK</span>      <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">IPOL_MASK</span>            <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">PP_OD_MASK</span>           <span class="o">=</span> <span class="mh">0x01</span>
+
+<span class="c">########CTRL_REG4 System Control 4 Register##############/</span>
+<span class="n">INT_EN_ASLP_MASK</span>      <span class="o">=</span><span class="mh">0x80</span>
+<span class="n">INT_EN_FIFO_MASK</span>      <span class="o">=</span><span class="mh">0x40</span>  
+<span class="n">INT_EN_TRANS_MASK</span>     <span class="o">=</span><span class="mh">0x20</span>
+<span class="n">INT_EN_LNDPRT_MASK</span>    <span class="o">=</span><span class="mh">0x10</span>
+<span class="n">INT_EN_PULSE_MASK</span>     <span class="o">=</span><span class="mh">0x08</span>
+<span class="n">INT_EN_FF_MT_MASK</span>     <span class="o">=</span><span class="mh">0x04</span>
+<span class="n">INT_EN_DRDY_MASK</span>      <span class="o">=</span><span class="mh">0x01</span>
+
+<span class="c">########CTRL_REG5 System Control 5 Register##############/</span>
+<span class="n">INT_CFG_ASLP_MASK</span>     <span class="o">=</span><span class="mh">0x80</span>
+<span class="n">INT_CFG_FIFO_MASK</span>     <span class="o">=</span><span class="mh">0x40</span>
+<span class="n">INT_CFG_TRANS_MASK</span>    <span class="o">=</span><span class="mh">0x20</span>
+<span class="n">INT_CFG_LNDPRT_MASK</span>   <span class="o">=</span><span class="mh">0x10</span>
+<span class="n">INT_CFG_PULSE_MASK</span>    <span class="o">=</span><span class="mh">0x08</span>
+<span class="n">INT_CFG_FF_MT_MASK</span>    <span class="o">=</span><span class="mh">0x04</span>
+<span class="n">INT_CFG_DRDY_MASK</span>     <span class="o">=</span><span class="mh">0x01</span>
+
+<span class="c">#</span>
+<span class="c">#  XYZ Offset Correction Registers</span>
+<span class="c">#</span>
+<span class="n">OFF_X_REG</span>           <span class="o">=</span>  <span class="mh">0x2F</span>
+<span class="n">OFF_Y_REG</span>           <span class="o">=</span>  <span class="mh">0x30</span>
+<span class="n">OFF_Z_REG</span>           <span class="o">=</span>  <span class="mh">0x31</span>
+
+<span class="c">#</span>
+<span class="c">#  MAG CTRL_REG1 System Control 1 Register</span>
+<span class="c">#</span>
+<span class="n">M_ACAL_MASK</span>          <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">M_RST_MASK</span>           <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">M_OST_MASK</span>           <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">M_OSR2_MASK</span>          <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">M_OSR1_MASK</span>          <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">M_OSR0_MASK</span>          <span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">M_HMS1_MASK</span>          <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">M_HMS0_MASK</span>          <span class="o">=</span> <span class="mh">0x01</span>
+<span class="n">M_OSR_MASK</span>           <span class="o">=</span> <span class="mh">0x1C</span>
+<span class="n">M_HMS_MASK</span>           <span class="o">=</span> <span class="mh">0x03</span>
+
+<span class="c">#OSR Selections</span>
+<span class="n">M_OSR_1_56_HZ</span>      <span class="o">=</span>   <span class="mh">0x00</span>
+<span class="n">M_OSR_6_25_HZ</span>      <span class="o">=</span>   <span class="n">M_OSR0_MASK</span>
+<span class="n">M_OSR_12_5_HZ</span>      <span class="o">=</span>   <span class="n">M_OSR1_MASK</span>
+<span class="n">M_OSR_50_HZ</span>        <span class="o">=</span>   <span class="n">M_OSR1_MASK</span><span class="o">+</span><span class="n">M_OSR0_MASK</span>
+<span class="n">M_OSR_100_HZ</span>       <span class="o">=</span>   <span class="n">M_OSR2_MASK</span>
+<span class="n">M_OSR_200_HZ</span>       <span class="o">=</span>   <span class="n">M_OSR2_MASK</span><span class="o">+</span><span class="n">M_OSR0_MASK</span>
+<span class="n">M_OSR_400_HZ</span>       <span class="o">=</span>   <span class="n">M_OSR2_MASK</span><span class="o">+</span><span class="n">M_OSR1_MASK</span>
+<span class="n">M_OSR_800_HZ</span>       <span class="o">=</span>   <span class="n">M_OSR2_MASK</span><span class="o">+</span><span class="n">M_OSR1_MASK</span><span class="o">+</span><span class="n">M_OSR0_MASK</span>
+
+<span class="c">#Hybrid Mode Selection</span>
+<span class="n">ACCEL_ACTIVE</span>       <span class="o">=</span>   <span class="mh">0x00</span>
+<span class="n">MAG_ACTIVE</span>         <span class="o">=</span>   <span class="n">M_HMS0_MASK</span>
+<span class="n">HYBRID_ACTIVE</span>      <span class="o">=</span>   <span class="p">(</span><span class="n">M_HMS1_MASK</span> <span class="o">|</span> <span class="n">M_HMS0_MASK</span><span class="p">)</span>
+
+
+<span class="c">#</span>
+<span class="c">#  MAG CTRL_REG2 System Control 2 Register</span>
+<span class="c">#</span>
+
+<span class="n">M_HYB_AUTOINC_MASK</span>   	<span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">M_MAXMIN_DIS_MASK</span>     	<span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">M_MAXMIN_DIS_THS_MASK</span>  	<span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">M_MAXMIN_RST_MASK</span>    	<span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">M_RST_CNT1_MASK</span>      	<span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">M_RST_CNT0_MASK</span>      	<span class="o">=</span> <span class="mh">0x01</span>
+
+<span class="c">#Mag Auto-Reset De-Gauss Frequency</span>
+<span class="n">RST_ODR_CYCLE</span>        <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">RST_16_ODR_CYCLE</span>     <span class="o">=</span> <span class="n">M_RST_CNT0_MASK</span>
+<span class="n">RST_512_ODR_CYCLE</span>    <span class="o">=</span> <span class="n">M_RST_CNT1_MASK</span>
+<span class="n">RST_DISABLED</span>         <span class="o">=</span> <span class="n">M_RST_CNT1_MASK</span><span class="o">+</span><span class="n">M_RST_CNT0_MASK</span>
+
+<span class="c">#</span>
+<span class="c">#  MAG CTRL_REG3 System Control 3 Register</span>
+<span class="c">#</span>
+
+<span class="n">M_RAW_MASK</span>          <span class="o">=</span>  <span class="mh">0x80</span>
+<span class="n">M_ASLP_OS_2_MASK</span>    <span class="o">=</span>  <span class="mh">0x40</span>
+<span class="n">M_ASLP_OS_1_MASK</span>    <span class="o">=</span>  <span class="mh">0x20</span>
+<span class="n">M_ASLP_OS_0_MASK</span>    <span class="o">=</span>  <span class="mh">0x10</span>
+<span class="n">M_THS_XYZ_MASK</span>      <span class="o">=</span>  <span class="mh">0x08</span>
+<span class="n">M_ST_Z_MASK</span>         <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">M_ST_XY1_MASK</span>       <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">M_ST_XY0_MASK</span>       <span class="o">=</span>  <span class="mh">0x01</span>
+<span class="n">M_ASLP_OSR_MASK</span>     <span class="o">=</span>  <span class="mh">0x70</span>
+<span class="n">M_ST_XY_MASK</span>        <span class="o">=</span>  <span class="mh">0x03</span>
+
+<span class="c">#OSR Selections</span>
+<span class="n">M_ASLP_OSR_1_56_HZ</span>   <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">M_ASLP_OSR_6_25_HZ</span>   <span class="o">=</span> <span class="n">M_ASLP_OS_0_MASK</span>
+<span class="n">M_ASLP_OSR_12_5_HZ</span>   <span class="o">=</span> <span class="n">M_ASLP_OS_1_MASK</span>
+<span class="n">M_ASLP_OSR_50_HZ</span>     <span class="o">=</span> <span class="n">M_ASLP_OS_1_MASK</span><span class="o">+</span><span class="n">M_ASLP_OS_0_MASK</span>
+<span class="n">M_ASLP_OSR_100_HZ</span>    <span class="o">=</span> <span class="n">M_ASLP_OS_2_MASK</span>
+<span class="n">M_ASLP_OSR_200_HZ</span>    <span class="o">=</span> <span class="n">M_ASLP_OS_2_MASK</span><span class="o">+</span><span class="n">M_ASLP_OS_0_MASK</span>
+<span class="n">M_ASLP_OSR_400_HZ</span>    <span class="o">=</span> <span class="n">M_ASLP_OS_2_MASK</span><span class="o">+</span><span class="n">M_ASLP_OS_1_MASK</span>
+<span class="n">M_ASLP_OSR_800_HZ</span>    <span class="o">=</span> <span class="n">M_ASLP_OS_2_MASK</span><span class="o">+</span><span class="n">M_ASLP_OS_1_MASK</span><span class="o">+</span><span class="n">M_ASLP_OS_0_MASK</span>
+
+<span class="c">#</span>
+<span class="c">#  MAG INT SOURCE Register</span>
+<span class="c">#</span>
+<span class="n">M_INT_SOURCE</span>       <span class="o">=</span>   <span class="mh">0x5E</span>
+
+<span class="n">SRC_M_DRDY_MASK</span>     <span class="o">=</span>  <span class="mh">0x04</span>
+<span class="n">SRC_M_VECM_MASK</span>     <span class="o">=</span>  <span class="mh">0x02</span>
+<span class="n">SRC_M_THS_MASK</span>     <span class="o">=</span>   <span class="mh">0x01</span>
+
+<span class="c">#  ACCEL VECTOR CONFIG Register</span>
+
+<span class="n">A_VECM_INIT_CFG_MASK</span> <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">A_VECM_INIT_EN_MASK</span>  <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">A_VECM_WAKE_EN_MASK</span>  <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">A_VECM_EN_MASK</span>       <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">A_VECM_UPDM_MASK</span>     <span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">A_VECM_INITM_MASK</span>    <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">A_VECM_ELE_MASK</span>      <span class="o">=</span> <span class="mh">0x01</span>
+
+<span class="c">#  ACCEL VECTOR THS MSB AND LSB Register</span>
+
+<span class="n">A_VECM_DBCNTM_MASK</span>  <span class="o">=</span>  <span class="mh">0x80</span>
+
+<span class="c">#  MAG VECTOR CONFIG Register</span>
+
+<span class="n">M_VECM_INIT_CFG_MASK</span> <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">M_VECM_INIT_EN_MASK</span>  <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">M_VECM_WAKE_EN_MASK</span>  <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">M_VECM_EN_MASK</span>       <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">M_VECM_UPDM_MASK</span>     <span class="o">=</span> <span class="mh">0x04</span>
+<span class="n">M_VECM_INITM_MASK</span>    <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">M_VECM_ELE_MASK</span>      <span class="o">=</span> <span class="mh">0x01</span>
+
+<span class="c">#  MAG VECTOR THS MSB AND LSB Register</span>
+<span class="n">M_VECM_DBCNTM_MASK</span>   <span class="o">=</span> <span class="mh">0x80</span>
+
+<span class="c">#  ACCEL FFMT THS X MSB AND LSB Register</span>
+
+<span class="n">A_FFMT_THS_XYZ_EN_MASK</span> <span class="o">=</span> 	<span class="mh">0x80</span>
+<span class="n">A_FFMT_THS_X_LSB_MASK</span>  <span class="o">=</span>	<span class="mh">0xFC</span>
+
+<span class="c">#  ACCEL FFMT THS Y MSB AND LSB Register</span>
+
+<span class="n">A_FFMT_THS_Y_EN_MASK</span> 	<span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">A_FFMT_THS_Y_LSB_MASK</span> 	<span class="o">=</span> <span class="mh">0xFC</span>
+
+<span class="c">#  ACCEL FFMT THS Z MSB AND LSB Register</span>
+
+<span class="n">A_FFMT_THS_Z_EN_MASK</span>    <span class="o">=</span>    <span class="mh">0x80</span>
+<span class="n">A_FFMT_THS_Z_LSB_MASK</span>   <span class="o">=</span>    <span class="mh">0xFC</span>
+<span class="c">#########################################################################################################</span>
+
+
+<div class="viewcode-block" id="FXOS8700CQR1"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1">[docs]</a><span class="k">class</span> <span class="nc">FXOS8700CQR1</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;Representation of an FXOS8700CQ accelerometer/ magnetometer object.&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializes the accelerometer and magnetometer chip in hybrid mode. Both Accel and mangnetometer functionality are available.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">FXOS8700CQR1_ADDRESS</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">I2C_Initialize</span><span class="p">()</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG2</span><span class="p">,</span> <span class="n">RST_MASK</span><span class="p">)</span>					<span class="c">#Reset sensor, and wait for reboot to complete</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">bcm2835_delay</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>											<span class="c">#Wait at least 1ms after issuing a reset before attempting communications.</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_StandbyMode</span><span class="p">()</span>
+		<span class="k">while</span> <span class="p">((</span><span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">RST_MASK</span><span class="p">)</span> <span class="o">==</span> <span class="bp">True</span><span class="p">):</span>
+			<span class="k">pass</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">HYBRID_ACTIVE</span><span class="o">|</span><span class="n">M_OSR2_MASK</span><span class="o">|</span><span class="n">M_OSR1_MASK</span><span class="o">|</span><span class="n">M_OSR0_MASK</span><span class="p">))</span>	<span class="c">#OSR=max, Hybrid Mode </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG2</span><span class="p">,</span> <span class="n">M_HYB_AUTOINC_MASK</span><span class="p">)</span>							<span class="c">#Enable Hyb Mode Auto Increments  in order to read all data</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG4</span><span class="p">,</span> <span class="n">INT_EN_DRDY_MASK</span> <span class="p">)</span>								<span class="c">#Enable interrupts for DRDY (TO, Aug 2012)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="n">FULL_SCALE_2G</span><span class="p">)</span>								<span class="c">#Full Scale of +/-2g</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,(</span><span class="n">HYB_ASLP_RATE_25HZ</span><span class="o">|</span><span class="n">HYB_DATA_RATE_50HZ</span><span class="p">))</span>			<span class="c">#System Output Data Rate of 200Hz (5ms), Sleep Mode Poll Rate of 50Hz (20ms)</span>
+		
+<div class="viewcode-block" id="FXOS8700CQR1.getID"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getID">[docs]</a>	<span class="k">def</span>	<span class="nf">getID</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read the chip ID.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: chip id</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">id</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">WHO_AM_I</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">id</span>
+	</div>
+	<span class="k">def</span>	<span class="nf">readStatusReg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Read the Status register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: status register</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">STATUS</span><span class="p">)</span>
+		
+<div class="viewcode-block" id="FXOS8700CQR1.activeMode"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.activeMode">[docs]</a>	<span class="k">def</span> <span class="nf">activeMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Put the chip in Active mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">reg1</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">);</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">reg1</span> <span class="o">|</span> <span class="n">ACTIVE_MASK</span><span class="p">))</span>			<span class="c">#Set the Active bit in System Control 1 Register.</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.standbyMode"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.standbyMode">[docs]</a>	<span class="k">def</span>	<span class="nf">standbyMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Put the chip in Standby mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">n</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">ACTIVE_MASK</span><span class="p">))</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">n</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ACTIVE_MASK</span><span class="p">)</span>
+	  </div>
+<div class="viewcode-block" id="FXOS8700CQR1.configureAccelerometer"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.configureAccelerometer">[docs]</a>	<span class="k">def</span>	<span class="nf">configureAccelerometer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the Accelerometer with default settings +/- 2g.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_StandbyMode</span><span class="p">()</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG4</span><span class="p">,</span> <span class="n">INT_EN_DRDY_MASK</span> <span class="p">)</span>          		<span class="c"># Enable interrupts for DRDY (TO, Aug 2012)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="n">FULL_SCALE_2G</span><span class="p">)</span>           		<span class="c"># Set FSR of accel to +/-2g</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">HYB_ASLP_RATE_25HZ</span><span class="o">|</span><span class="n">HYB_DATA_RATE_50HZ</span><span class="p">))</span>     <span class="c"># Set ODRs</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ActiveMode</span><span class="p">()</span>
+	  </div>
+<div class="viewcode-block" id="FXOS8700CQR1.configureMagnetometer"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.configureMagnetometer">[docs]</a>	<span class="k">def</span> <span class="nf">configureMagnetometer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the magnetometer with default settigs.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_StandbyMode</span><span class="p">()</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">HYBRID_ACTIVE</span><span class="o">|</span><span class="n">M_OSR2_MASK</span><span class="o">|</span><span class="n">M_OSR1_MASK</span><span class="o">|</span><span class="n">M_OSR0_MASK</span><span class="p">))</span>    <span class="c"># OSR=max, hybrid mode (TO, Aug 2012)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG2</span><span class="p">,</span> <span class="n">M_HYB_AUTOINC_MASK</span><span class="p">)</span>       <span class="c">#enable hybrid autoinc</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ActiveMode</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.hybridMode"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.hybridMode">[docs]</a>	<span class="k">def</span> <span class="nf">hybridMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the chip in hybrid mode with default settigs 50 Hz ouput data rate.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_StandbyMode</span><span class="p">()</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">HYBRID_ACTIVE</span><span class="o">|</span><span class="n">M_OSR2_MASK</span><span class="o">|</span><span class="n">M_OSR1_MASK</span><span class="o">|</span><span class="n">M_OSR0_MASK</span><span class="p">))</span>     <span class="c">#OSR=max, hybrid mode (TO, Aug 2012)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_CTRL_REG2</span><span class="p">,</span> <span class="n">M_HYB_AUTOINC_MASK</span><span class="p">)</span>       				<span class="c"># enable hybrid autoinc</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG4</span><span class="p">,</span> <span class="n">INT_EN_DRDY_MASK</span> <span class="p">)</span>           				<span class="c"># Enable interrupts for DRDY (TO, Aug 2012)</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="n">FULL_SCALE_2G</span><span class="p">)</span>            				 <span class="c"># Set FSR of accel to +/-2g</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">CTRL_REG1</span><span class="p">,</span> <span class="p">(</span><span class="n">HYB_ASLP_RATE_25HZ</span><span class="o">|</span><span class="n">HYB_DATA_RATE_50HZ</span><span class="p">))</span>     			<span class="c">#Set ODRs</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ActiveMode</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.pollAccelerometer"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.pollAccelerometer">[docs]</a>	<span class="k">def</span> <span class="nf">pollAccelerometer</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get accelerometer data , these are left justified.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: acceleration data (ax, ay, az)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">raw0</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_X_MSB</span><span class="p">)</span>   
+		<span class="n">raw1</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_X_LSB</span><span class="p">)</span>
+		<span class="n">raw2</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_Y_MSB</span><span class="p">)</span>
+		<span class="n">raw3</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_Y_LSB</span><span class="p">)</span>
+		<span class="n">raw4</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_Z_MSB</span><span class="p">)</span>
+		<span class="n">raw5</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">OUT_Z_LSB</span><span class="p">)</span>
+		<span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw1</span> 		<span class="c"># Pull out 16-bit, 2&#39;s complement magnetometer data</span>
+		<span class="n">ay</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw3</span> 
+		<span class="n">az</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw4</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw5</span> 
+		
+		<span class="k">if</span><span class="p">(</span><span class="n">ax</span> <span class="o">&gt;</span> <span class="n">UINT14_MAX</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>	 
+			<span class="n">ax</span> <span class="o">-=</span> <span class="n">UINT14_MAX</span> 
+		<span class="k">if</span><span class="p">(</span><span class="n">ay</span> <span class="o">&gt;</span> <span class="n">UINT14_MAX</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>	 
+			<span class="n">ay</span> <span class="o">-=</span> <span class="n">UINT14_MAX</span> 
+		<span class="k">if</span><span class="p">(</span><span class="n">az</span> <span class="o">&gt;</span> <span class="n">UINT14_MAX</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>	 
+			<span class="n">az</span> <span class="o">-=</span> <span class="n">UINT14_MAX</span> 
+			
+		<span class="k">return</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">az</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.FIFOMode"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.FIFOMode">[docs]</a>	<span class="k">def</span>	<span class="nf">FIFOMode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Put the sensor in FIFO mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">F_SETUP</span><span class="p">,</span><span class="mi">6</span><span class="o">&lt;&lt;</span><span class="n">mode</span><span class="p">)</span>
+		 </div>
+<div class="viewcode-block" id="FXOS8700CQR1.highPassFilter"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.highPassFilter">[docs]</a>	<span class="k">def</span>	<span class="nf">highPassFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">status</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Enable the highpass filter.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span><span class="n">status</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.fullScaleRange"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.fullScaleRange">[docs]</a>	<span class="k">def</span>	<span class="nf">fullScaleRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">range</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure full scale range.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span><span class="nb">range</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.setAccelerometerDynamicRange"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.setAccelerometerDynamicRange">[docs]</a>	<span class="k">def</span>	<span class="nf">setAccelerometerDynamicRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">range</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the sensor accelerometer dynamic range.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param range:  Accelerometer dynamic range</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_StandbyMode</span><span class="p">()</span> 	
+		<span class="k">if</span> <span class="nb">range</span> <span class="o">==</span> <span class="n">SCALE2G</span><span class="p">:</span>
+				<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="p">(</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="n">XYZ_DATA_CFG</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">FS_MASK</span><span class="p">))</span>		<span class="c">#Write the 2g dynamic range value into register = 0x0E		 </span>
+		<span class="k">elif</span> <span class="nb">range</span> <span class="o">==</span> <span class="n">SCALE4G</span><span class="p">:</span>
+				<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="p">(</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="n">XYZ_DATA_CFG</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">FS_MASK</span><span class="p">))</span> 		<span class="c">#Write the 4g dynamic range value into register = 0x0E</span>
+				<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="p">(</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="n">XYZ_DATA_CFG</span><span class="p">)</span> <span class="o">|</span> <span class="n">FULL_SCALE_4G</span><span class="p">))</span> 		 
+		<span class="k">elif</span> <span class="nb">range</span> <span class="o">==</span><span class="n">SCALE8G</span><span class="p">:</span>
+				<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="p">(</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="n">XYZ_DATA_CFG</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">FS_MASK</span><span class="p">))</span> 		<span class="c">#Write the 8g dynamic range value into register = 0x0E</span>
+				<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">XYZ_DATA_CFG</span><span class="p">,</span> <span class="p">(</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="n">XYZ_DATA_CFG</span><span class="p">)</span> <span class="o">|</span> <span class="n">FULL_SCALE_8G</span><span class="p">))</span> 
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ActiveMode</span><span class="p">()</span> 
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.magnetometerStatus"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.magnetometerStatus">[docs]</a>	<span class="k">def</span>	<span class="nf">magnetometerStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure the accelerometer status.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">stat</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_DR_STATUS</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">stat</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.pollMagnetometer"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.pollMagnetometer">[docs]</a>	<span class="k">def</span>	<span class="nf">pollMagnetometer</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Reads the magnetometer data.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: magnetometer data (mx, my, mz)</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">raw0</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_X_MSB</span><span class="p">)</span>
+		<span class="n">raw1</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_X_LSB</span><span class="p">)</span>
+		<span class="n">raw2</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_Y_MSB</span><span class="p">)</span>
+		<span class="n">raw3</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_Y_MSB</span><span class="p">)</span>
+		<span class="n">raw4</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_Z_MSB</span><span class="p">)</span>
+		<span class="n">raw5</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">M_OUT_Z_MSB</span><span class="p">)</span>	
+		<span class="n">mx</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw1</span>			<span class="c"># Pull out 16-bit, 2&#39;s complement magnetometer data</span>
+		<span class="n">my</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw3</span>
+		<span class="n">mz</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw4</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw5</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">,</span> <span class="n">mz</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.getHeading"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getHeading">[docs]</a>	<span class="k">def</span> <span class="nf">getHeading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get magnetometer heading .</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: magnetometer heading</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pollAccelerometer</span><span class="p">()</span>		
+		<span class="n">heading</span> <span class="o">=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">((</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">*</span> <span class="mi">180</span><span class="p">)</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+  		<span class="k">return</span> <span class="n">heading</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.setODR"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.setODR">[docs]</a>	<span class="k">def</span>	<span class="nf">setODR</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">DataRateValue</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the output data rate.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param DataRateValue:  Output data rate </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_SetODR</span><span class="p">(</span><span class="n">DataRateValue</span><span class="p">)</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.getODR"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getODR">[docs]</a>	<span class="k">def</span>	<span class="nf">getODR</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get the output data rate .</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_GetODR</span><span class="p">()</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.getOrientation"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getOrientation">[docs]</a>	<span class="k">def</span> <span class="nf">getOrientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns current orientation of the sensor.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: current orientation of the Sensorian</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">orientation</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">PL_STATUS</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">orientation</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.configureOrientation"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.configureOrientation">[docs]</a>	<span class="k">def</span> <span class="nf">configureOrientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Configure Orientation mode.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">)</span>			<span class="c">#read contents of register </span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">&amp;=</span> <span class="mh">0xFE</span>									<span class="c">#Set last bit to 0. </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">,</span> <span class="n">CTRL_REG1_Data</span><span class="p">)</span>			 
+
+		<span class="n">CTRL_REG1_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">)</span> 			<span class="c">#Note: Can combine this step with above </span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">&amp;=</span> <span class="mh">0xC7</span>								<span class="c">#Clear the sample rate bits </span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">|=</span> <span class="mh">0x20</span>								<span class="c">#Set the sample rate bits to 50 Hz </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">,</span> <span class="n">CTRL_REG1_Data</span><span class="p">)</span> 		<span class="c">#Write updated value into the register. </span>
+
+		<span class="c">#Set the PL_EN bit in Register 0x11 PL_CFG. This will enable the orientation detection. </span>
+		<span class="n">PLCFG_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x11</span><span class="p">)</span>
+		<span class="n">PLCFG_Data</span> <span class="o">|=</span> <span class="mh">0x40</span> 
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x11</span><span class="p">,</span> <span class="n">PLCFG_Data</span><span class="p">)</span>
+
+		<span class="c">#Set the Back/Front Angle trip points in register 0x13 following the table in the data sheet.</span>
+
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x13</span><span class="p">)</span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">&amp;=</span> <span class="mh">0x3F</span> 							<span class="c">#Clear bit 7 and 6 </span>
+		<span class="c">#Select one of the following to set the B/F angle value: </span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">|=</span> <span class="mh">0x00</span>						<span class="c">#This does nothing additional and keeps bits [7:6] = 00 </span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">|=</span> <span class="mh">0x40</span>						<span class="c"># Sets bits[7:6] = 01</span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">|=</span> <span class="mh">0x80</span>						<span class="c"># Sets bits[7:6] = 02</span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">|=</span> <span class="mh">0xC0</span>						<span class="c"># Sets bits[7:6] = 03 </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x13</span><span class="p">,</span> <span class="n">PL_BF_ZCOMP_Data</span><span class="p">)</span>	<span class="c">#Write in the updated Back/Front Angle</span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="mh">0x1C</span><span class="p">)</span> 	<span class="c">#Read out contents of the register (can be read by all </span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">&amp;=</span> <span class="mh">0xF8</span> 						<span class="c">#Clear the last three bits of the register </span>
+		<span class="n">PL_BF_ZCOMP_Data</span> <span class="o">|=</span> <span class="mh">0x00</span> 
+		
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x13</span><span class="p">,</span> <span class="n">PL_BF_ZCOMP_Data</span><span class="p">)</span>		<span class="c">#Write in the updated Z-lockout angle</span>
+		<span class="n">P_L_THS_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x14</span><span class="p">)</span>					
+		<span class="n">P_L_THS_Data</span> <span class="o">&amp;=</span> <span class="mh">0x07</span>		<span class="c">#Clear the Threshold values </span>
+		<span class="n">P_L_THS_Data</span> <span class="o">|=</span> <span class="p">(</span><span class="mh">0x07</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="mi">3</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x14</span><span class="p">,</span><span class="n">P_L_THS_Data</span><span class="p">)</span>
+		<span class="c">#Set the Hysteresis Angle </span>
+		<span class="n">P_L_THS_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x14</span><span class="p">)</span> 
+		<span class="n">P_L_THS_Data</span> <span class="o">&amp;=</span> <span class="mh">0xF8</span>		<span class="c">#Clear the Hysteresis values</span>
+		<span class="n">P_L_THS_Data</span> <span class="o">|=</span> <span class="mh">0x02</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x14</span><span class="p">,</span><span class="n">P_L_THS_Data</span><span class="p">)</span>
+		
+		<span class="n">CTRL_REG4_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2D</span><span class="p">)</span>	<span class="c">#Read out the contents of the register</span>
+		<span class="n">CTRL_REG4_Data</span> <span class="o">|=</span> <span class="mh">0x10</span>							<span class="c">#Set bit 4 </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2D</span><span class="p">,</span> <span class="n">CTRL_REG4_Data</span><span class="p">)</span>		<span class="c">#Set the bit and write into CTRL_REG4</span>
+		
+		<span class="n">CTRL_REG5_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2E</span><span class="p">)</span>	 	
+		<span class="n">CTRL_REG5_Data</span> <span class="o">&amp;=</span> <span class="mh">0xEF</span>							<span class="c">#Clear bit 4 to choose the interrupt to route to INT2 </span>
+		<span class="n">CTRL_REG5_Data</span> <span class="o">|=</span> <span class="mh">0x10</span>							<span class="c">#Set bit 4 to choose the interrupt to route to INT1 </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2E</span><span class="p">,</span> <span class="n">CTRL_REG5_Data</span><span class="p">)</span>		<span class="c">#Write in the interrupt routing selection </span>
+		
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x12</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">)</span>				<span class="c">#This sets the debounce counter to 100 ms at 50 Hz </span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">)</span>		<span class="c">#Read out the contents of the register </span>
+		<span class="n">CTRL_REG1_Data</span> <span class="o">|=</span> <span class="mh">0x01</span>							<span class="c">#Change the value in the register to Active Mode. </span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_WriteByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="mh">0x2A</span><span class="p">,</span> <span class="n">CTRL_REG1_Data</span><span class="p">)</span>		<span class="c">#Write in the updated value to put the device in Active Mode </span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.getChipMode"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getChipMode">[docs]</a>	<span class="k">def</span> <span class="nf">getChipMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get the current mode of the chip.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">mode</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">SYSMOD</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">mode</span>
+	</div>
+<div class="viewcode-block" id="FXOS8700CQR1.getTemperature"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.getTemperature">[docs]</a>	<span class="k">def</span>	<span class="nf">getTemperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Reads the sensor temperature.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">temp</span> <span class="o">=</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">TEMP</span><span class="p">)</span>    
+		<span class="k">return</span> <span class="n">temp</span>
+		</div>
+<div class="viewcode-block" id="FXOS8700CQR1.readStatusReg"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.readStatusReg">[docs]</a>	<span class="k">def</span> <span class="nf">readStatusReg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read contents of status register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param none: </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">FXO</span><span class="o">.</span><span class="n">FXOS8700CQ_ReadByte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span><span class="n">STATUS</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.writeByte"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.writeByte">[docs]</a>	<span class="k">def</span> <span class="nf">writeByte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Write a data byte on the given register.</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address </span>
+<span class="sd">		:param value: Register value </span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">FXO</span><span class="o">.</span><span class="n">I2C_WriteByteRegister</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">,</span><span class="n">value</span><span class="p">)</span>		<span class="c">#Write value to register</span>
+</div>
+<div class="viewcode-block" id="FXOS8700CQR1.readByte"><a class="viewcode-back" href="../fxos8700cqr1.html#FXOS8700CQR1.FXOS8700CQR1.readByte">[docs]</a>	<span class="k">def</span> <span class="nf">readByte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Read a data byte from the given register.</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">		:param address: Sensor address</span>
+<span class="sd">		:param reg: Register address</span>
+<span class="sd">		:returns: none</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">FXO</span><span class="o">.</span><span class="n">I2C_ReadByteRegister</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="n">reg</span><span class="p">)</span>	<span class="c">#Read register current value</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-symbol.original.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Sensorian Python Library Reference Guide 1.0</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Sensorian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
